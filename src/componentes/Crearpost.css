@@ -1,0 +1,63 @@
+.blockcrear{
+    max-width: 500px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    background-color: #fff;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 10px auto;
+}
+.llenado{
+    display: flex;
+    padding: 10px;
+    gap: 30px;
+}
+.multincog{
+    display: flex;
+    padding: 12px;
+    gap: 50px;
+}
+.Fotoperfil{
+    margin-right: 10px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.queinput{
+    flex-grow: 1;
+    display: flex;
+    border-radius: 30px;
+    border-color: black;
+}
+.text-sm{
+    padding: 5px;
+}
+.addmulti{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre texto e ícono */
+    border-radius: 25px;
+    background-color: #494949;
+    color: white;
+    padding: 10px 20px; /* Mucho más delgado */
+    font-size: 16px; /* Ajusta tamaño del texto */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.incognito{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre texto e ícono */
+    border-radius: 25px;
+    background-color: #494949;
+    color: white;
+    padding: 10px 20px; /* Mucho más delgado */
+    font-size: 16px; /* Ajusta tamaño del texto */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.addmulti:hover, .incognito:hover {
+    background-color: #497fac;
+  }

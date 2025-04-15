@@ -1,7 +1,7 @@
 // components/Login.js
 import Image from 'next/image';
 import './Login.css'; // Asegúrate de colocar Login.css en la carpeta adecuada
-import checkIcon from '../public/globe.svg'; // Ajusta la ruta según corresponda
+//import checkIcon from '../public/globe.svg'; // Ajusta la ruta según corresponda
 
 const Login = () => {
   return (

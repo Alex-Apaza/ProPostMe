@@ -45,7 +45,7 @@ ol {
 /* Optional dark mode support */
 @media (prefers-color-scheme: dark) {
   body {
-    /*background-color: #222831;*/
+    background-color: #222831;
     color: #eee;
   }
 }

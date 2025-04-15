@@ -12,6 +12,7 @@
 .busqueda {
   display: flex;
   padding-left: 40px;
+  gap: 50px;
 }
 .lupa{
     width: 30px;
@@ -25,6 +26,11 @@
 .perfil img {
   border-radius: 30%;
   stroke-width: 20px;
+}
+.usuario{
+  display: flex;
+  padding-top: 20px;
+  padding-left: 10px;
 }
 .input {
   width: 600px;

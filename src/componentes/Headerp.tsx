@@ -33,9 +33,9 @@ const Principal = () => {
         <div className="perfil">
           <Image
             className="usuario"
-            src="/Usuario.png"
-            width={30}
-            height={30}
+            src="/Perfil.png"
+            width={50}
+            height={50}
             alt={"Icono de menu"}
           />
         </div>
