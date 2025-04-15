@@ -20,7 +20,13 @@ export default function Home() {
             <div className="background-shadow">
             <div className="text-wrapper-2">INICIAR SESIÓN</div>
             </div></Link>
-            <div className="div-wrapper"><div className="text-wrapper-2">REGÍSTRATE</div></div>
+            <Link href="/Reistropage">
+            <div className="div-wrapper">
+            <div className="text-wrapper-2">REGÍSTRATE</div>
+            </div></Link>
+
+            
+            
             <div className="button-menu-wrapper">
               <div className="button-menu">
                 <img className="SVG" src="/buscar.png" />
