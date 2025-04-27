@@ -1,27 +1,11 @@
-import sql from 'mssql';
+import mysql from 'mysql2/promise';
 
-
-const config: sql.config = {
-  user: process.env.DB_USER as string,
-  password: process.env.DB_PASSWORD as string,
-  server: process.env.DB_SERVER as string,
-  database: process.env.DB_NAME as string,
-  port: parseInt(process.env.DB_PORT as string),
-  options: {
-    encrypt: false,
-    trustServerCertificate: true,
-  },
-};
-
-let pool: sql.ConnectionPool | null = null;
-
-export async function getConnection() {
-  if (pool) return pool;
-  try {
-    pool = await sql.connect(config);
-    return pool;
-  } catch (error) {
-    console.error('Error de conexión:', error);
-    throw error;
-  }
-}
+export const db = mysql.createPool({
+  host: '127.0.0.1',
+  user: 'root', // O el usuario que me confirmes
+  password: '', // O tu contraseña real si tienes
+  database: 'postmedb',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
