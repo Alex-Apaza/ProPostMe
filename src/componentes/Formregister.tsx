@@ -83,7 +83,8 @@ const Formregister = () => {
       <h2 className="text-2xl font-bold mb-6 text-center">Crea tu Cuenta</h2>
       {mensaje && <p className="text-center text-red-500 mb-4">{mensaje}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        
+      <label className="font-medium">Ingresa tus Datos:</label>
+
         <input
           type="text"
           placeholder="Nombre"
@@ -119,7 +120,8 @@ const Formregister = () => {
           className="border p-2 rounded"
           required
         />
-         <text>Fecha de nacimiento:</text>
+        <label className="font-medium">Fecha de nacimiento:</label>
+
         <input
           type="date"
           value={fechaNacimiento}

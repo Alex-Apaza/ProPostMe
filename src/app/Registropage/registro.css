@@ -1,20 +1,54 @@
-.frame-2{
-    max-width: 500px;
-    border: 1px solid #ddd;
-    border-radius: 18px;
-    background-color: #fff;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    font-family: 'Segoe UI', sans-serif;
-    margin: 10px auto;
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 60px 20px;
+  flex-wrap: wrap;
+}
 
+.logo-area {
+  text-align: center;
+  max-width: 400px;
 }
-.letrapost{
-    position: relative;
-    left: 600px;
-    top: 0px;
-    padding-top: 30px;
+
+.letrapost {
+  margin: 0 auto;
 }
+
+.mensaje {
+  color: white;
+  font-size: 18px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.blokeregistro {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+  .flex-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo-area img {
+    width: 200px;
+  }
+
+  .mensaje {
+    font-size: 16px;
+  }
+}
+
 @keyframes hero-gradient-animation {
     0% {
         --y-0: 90%;

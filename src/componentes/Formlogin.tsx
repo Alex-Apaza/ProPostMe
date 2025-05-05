@@ -48,7 +48,7 @@ const Formlogin = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg">
+    <div className="w-full max-w-md mx-auto my-10 p-6 bg-[#1110] text-white rounded-xl shadow-md border border-gray-700">
       <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
       {mensaje && <p className="text-center text-red-500 mb-4">{mensaje}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
