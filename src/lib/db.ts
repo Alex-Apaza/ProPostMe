@@ -1,11 +1,12 @@
 import mysql from 'mysql2/promise';
 
 export const db = mysql.createPool({
-  host: '127.0.0.1',
-  user: 'root', // O el usuario que me confirmes
-  password: '', // O tu contraseña real si tienes
-  database: 'postmedb',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT),
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 10,  // puedes ajustar
   queueLimit: 0
 });
