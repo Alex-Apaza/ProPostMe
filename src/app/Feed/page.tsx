@@ -1,17 +1,16 @@
 'use client';
 
 import Headerp from '@/componentes/Headerp';
-import StudentMobilityCard from '@/componentes/StudentMobilityCard';
 import Crearpost from '@/componentes/Crearpost';
+import Cardpost from '@/componentes/Cardpost';
 
 export default function Feed() {
   return (
     <div>
       <Headerp />
-      <div className='Posteos'>
+      <div className='Posteos px-4 mt-4 flex flex-col items-center gap-6'>
         <Crearpost />
-        <StudentMobilityCard />
-        <StudentMobilityCard />
+        <Cardpost />
       </div>
     </div>
   );

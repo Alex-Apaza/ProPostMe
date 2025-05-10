@@ -1,4 +1,7 @@
 'use client';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -60,22 +63,31 @@ const Formregister = () => {
     }
 
     try {
-      await addDoc(collection(db, 'usuarios'), {
-        nombre,
-        apellido,
-        correo_institucional: correo,
-        contraseña,
-        fecha_nacimiento: fechaNacimiento,
-        universidadId: idUniversidad,
-        creadoEn: new Date()
-      });
+  const docRef = await addDoc(collection(db, 'usuarios'), {
+    nombre,
+    apellido,
+    correo_institucional: correo,
+    contraseña,
+    fecha_nacimiento: fechaNacimiento,
+    universidadId: idUniversidad,
+    creadoEn: new Date(),
+    fotoPerfil: '' // opcional
+  });
 
-      setMensaje('Registro exitoso, redirigiendo...');
-      setTimeout(() => router.push('/loginsesion'), 2000);
-    } catch (error) {
-      console.error('Error registrando usuario:', error);
-      setMensaje('Error en el registro');
-    }
+  // Guardamos el ID generado por Firestore
+  const usuarioId = docRef.id;
+
+  // Puedes almacenarlo temporalmente
+  localStorage.setItem('usuarioId', usuarioId);
+
+  setMensaje('Registro exitoso, redirigiendo...');
+  setTimeout(() => router.push('/loginsesion'), 2000);
+} catch (error) {
+  console.error('Error registrando usuario:', error);
+  setMensaje('Error en el registro');
+}
+
+
   };
 
   return (
