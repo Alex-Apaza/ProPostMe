@@ -1,12 +1,11 @@
-'use client';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+"use client";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
-
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import "./Formregister.css";
 
 interface Universidad {
@@ -18,26 +17,26 @@ interface Universidad {
 const Formregister = () => {
   const router = useRouter();
 
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [contraseña, setContraseña] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [universidades, setUniversidades] = useState<Universidad[]>([]);
-  const [idUniversidad, setIdUniversidad] = useState<string>('');
-  const [mensaje, setMensaje] = useState('');
+  const [idUniversidad, setIdUniversidad] = useState<string>("");
+  const [mensaje, setMensaje] = useState("");
 
   useEffect(() => {
     const cargarUniversidades = async () => {
       try {
-        const snapshot = await getDocs(collection(db, 'universidades'));
+        const snapshot = await getDocs(collection(db, "universidades"));
         const array = snapshot.docs.map((doc) => ({
           id: doc.id,
-          ...(doc.data() as { nombre: string; dominio: string })
+          ...(doc.data() as { nombre: string; dominio: string }),
         }));
         setUniversidades(array);
       } catch (error) {
-        console.error('Error cargando universidades:', error);
+        console.error("Error cargando universidades:", error);
       }
     };
     cargarUniversidades();
@@ -47,47 +46,53 @@ const Formregister = () => {
     e.preventDefault();
 
     if (!idUniversidad) {
-      setMensaje('Selecciona una universidad');
+      setMensaje("Selecciona una universidad");
       return;
     }
 
-    const universidadSeleccionada = universidades.find(u => u.id === idUniversidad);
+    const universidadSeleccionada = universidades.find(
+      (u) => u.id === idUniversidad
+    );
     if (!universidadSeleccionada) {
-      setMensaje('Universidad inválida.');
+      setMensaje("Universidad inválida.");
       return;
     }
 
     if (!correo.endsWith(universidadSeleccionada.dominio)) {
-      setMensaje(`El correo debe terminar en ${universidadSeleccionada.dominio}`);
+      setMensaje(
+        `El correo debe terminar en ${universidadSeleccionada.dominio}`
+      );
       return;
     }
 
     try {
-  const docRef = await addDoc(collection(db, 'usuarios'), {
-    nombre,
-    apellido,
-    correo_institucional: correo,
-    contraseña,
-    fecha_nacimiento: fechaNacimiento,
-    universidadId: idUniversidad,
-    creadoEn: new Date(),
-    fotoPerfil: '' // opcional
-  });
+      const docRef = await addDoc(collection(db, "usuarios"), {
+        nombre,
+        apellido,
+        correo_institucional: correo,
+        contraseña,
+        fecha_nacimiento: fechaNacimiento,
+        universidadId: idUniversidad,
+        universidadNombre: universidadSeleccionada.nombre, // ⬅️ esto es clave
+        creadoEn: new Date(),
+        fotoPerfil: "",
+        fotoPortada: "",
+        carrera: "",
+        descripcion: "",
+      });
 
-  // Guardamos el ID generado por Firestore
-  const usuarioId = docRef.id;
+      // Guardamos el ID generado por Firestore
+      const usuarioId = docRef.id;
 
-  // Puedes almacenarlo temporalmente
-  localStorage.setItem('usuarioId', usuarioId);
+      // Puedes almacenarlo temporalmente
+      localStorage.setItem("usuarioId", usuarioId);
 
-  setMensaje('Registro exitoso, redirigiendo...');
-  setTimeout(() => router.push('/loginsesion'), 2000);
-} catch (error) {
-  console.error('Error registrando usuario:', error);
-  setMensaje('Error en el registro');
-}
-
-
+      setMensaje("Registro exitoso, redirigiendo...");
+      setTimeout(() => router.push("/loginsesion"), 2000);
+    } catch (error) {
+      console.error("Error registrando usuario:", error);
+      setMensaje("Error en el registro");
+    }
   };
 
   return (
@@ -95,7 +100,7 @@ const Formregister = () => {
       <h2 className="text-2xl font-bold mb-6 text-center">Crea tu Cuenta</h2>
       {mensaje && <p className="text-center text-red-500 mb-4">{mensaje}</p>}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="font-medium">Ingresa tus Datos:</label>
+        <label className="font-medium">Ingresa tus Datos:</label>
 
         <input
           type="text"
@@ -105,7 +110,7 @@ const Formregister = () => {
           className="border p-2 rounded"
           required
         />
-        
+
         <input
           type="text"
           placeholder="Apellido"
@@ -114,7 +119,7 @@ const Formregister = () => {
           className="border p-2 rounded"
           required
         />
-        
+
         <input
           type="email"
           placeholder="Correo institucional"
@@ -123,7 +128,7 @@ const Formregister = () => {
           className="border p-2 rounded"
           required
         />
-        
+
         <input
           type="password"
           placeholder="Contraseña"
@@ -156,7 +161,10 @@ const Formregister = () => {
           ))}
         </select>
 
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded"
+        >
           Registrarme
         </button>
       </form>

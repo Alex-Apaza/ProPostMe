@@ -14,6 +14,7 @@ import { doc, getDoc, deleteDoc, setDoc } from "firebase/firestore";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { getCountFromServer } from "firebase/firestore";
+import Comentario from "@/componentes/Comentario";
 
 interface Post {
   id: string;
@@ -80,6 +81,7 @@ const Cardpost = () => {
     return () => unsubscribe(); // limpiamos listener al desmontar
   }, []);
   const [menuAbierto, setMenuAbierto] = useState<string | null>(null);
+const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(null);
 
   const toggleMenu = (postId: string) => {
     setMenuAbierto(menuAbierto === postId ? null : postId);
@@ -179,6 +181,8 @@ const Cardpost = () => {
             </div>
           );
         }
+        // Comentarios
+       
 
         return (
           <div
@@ -266,9 +270,12 @@ const Cardpost = () => {
                   )}
                 </div>
               )}
+             
 
               {/* Acciones */}
               <div className="flex justify-around text-sm text-zinc-600 dark:text-zinc-300 border-t pt-3">
+                
+
                 <button
                   className="flex items-center gap-2 hover:text-blue-500 text-white"
                   onClick={() => toggleLike(post.id)}
@@ -277,13 +284,23 @@ const Cardpost = () => {
                   {post.totalLikes > 0 && <span>({post.totalLikes})</span>}
                 </button>
 
-                <button className="flex items-center gap-2 hover:text-blue-500">
+                <button
+                  className="flex items-center gap-2 hover:text-blue-500"
+                  onClick={() =>
+                    setComentariosAbiertos(
+                      post.id === comentariosAbiertos ? null : post.id
+                    )
+                  }
+                >
                   💬 Comentar
                 </button>
+
                 <button className="flex items-center gap-2 hover:text-blue-500">
                   🔁 Compartir
                 </button>
               </div>
+               {/* Comentarios */}
+              {comentariosAbiertos === post.id && <Comentario postId={post.id} />}
             </div>
           </div>
         );

@@ -1,41 +1,108 @@
-.container {
+.header {
   display: flex;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 0px;
   justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #000000;
+  border-bottom: 1px solid #ccc;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.menubusqueda {
+
+.header-left,
+.header-right {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
-.busqueda {
+
+/* Logo y botón de búsqueda */
+.logo {
+  cursor: pointer;
+  font-size: 24px;
+}
+.search-button {
+  background: #f0f0f09a;
+  border-radius: 50%;
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Centro - íconos */
+.nav-icons {
   display: flex;
-  padding-left: 40px;
-  gap: 50px;
-}
-.lupa{
-    width: 30px;
-    height: 30px;
-    margin-left: 10px;
-}
-.perfil {
-  display: flex;
+  gap: 32px;
   align-items: center;
 }
-.perfil img {
-  border-radius: 30%;
-  stroke-width: 20px;
-}
-.usuario{
+.nav-item {
   display: flex;
-  padding-top: 20px;
-  padding-left: 10px;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #555;
 }
-.input {
-  width: 600px;
-  height: 30px;
-  border-radius: 20px;
-  border: 20px;
-  padding-left: 10px;
+.nav-label {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* Perfil */
+.perfil-pic {
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Botón menú */
+.menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Responsive: solo íconos en móvil */
+@media (max-width: 768px) {
+  .nav-label {
+    display: none;
+  }
+
+  .search-button {
+    padding: 6px;
+  }
+
+  .nav-icons {
+    gap: 20px;
+  }
+}
+
+.perfil-contenedor {
+  position: relative;
+  cursor: pointer;
+}
+
+.perfil-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: rgb(50, 47, 47);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  padding: 0.5rem;
+  z-index: 10;
+}
+
+.perfil-opcion {
+  display: block;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #333;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.perfil-opcion:hover {
+  background-color: #f0f0f0;
 }
