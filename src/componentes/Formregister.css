@@ -1,0 +1,96 @@
+/* Formregister.css */
+
+.formregister-container {
+  background-color: white;
+  border: 2px solid #4EDCD8;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 480px;
+  margin: 2rem auto;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.formregister-container h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #000;
+  margin-bottom: 0.5rem;
+}
+
+.formregister-container p {
+  text-align: center;
+  color: #4f5fd9;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.formregister-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.a{
+    
+    color: #4EDCD8;
+    font-weight: bold;
+}
+.formregister-form input,
+.formregister-form select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.formregister-form input:focus,
+.formregister-form select:focus {
+  outline: none;
+  border-color: #4EDCD8;
+  box-shadow: 0 0 0 2px rgba(78, 220, 216, 0.3);
+}
+
+.formregister-form select {
+  background-color: white;
+  color: #333;
+}
+
+.formregister-form option {
+  color: #000;
+  background: white;
+}
+
+.formregister-form label {
+  font-weight: 500;
+  color: #444;
+}
+
+.formregister-button {
+  background-color: #4EDCD8;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.formregister-button:hover {
+  background-color: #3bc8c4;
+}
+
+@media (max-width: 600px) {
+  .formregister-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .formregister-form input,
+  .formregister-form select {
+    font-size: 0.95rem;
+  }
+}

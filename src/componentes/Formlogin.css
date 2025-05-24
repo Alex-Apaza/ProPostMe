@@ -1,0 +1,80 @@
+.login-container {
+  background: #ffffff;
+  color: #333;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Roboto', sans-serif;
+  border: 2px solid #4EDCD8;
+}
+
+.login-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.login-message {
+  text-align: center;
+  color: red;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.login-label {
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+  font-size: 14px;
+}
+
+.login-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.login-button {
+  background: #4EDCD8;
+  color: white;
+  font-weight: bold;
+  padding: 12px;
+  border: 2px solid white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.login-button:hover {
+  background: #34c1be;
+}
+.login-register {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 16px;
+  color: #555;
+}
+
+.login-link {
+  color: #4EDCD8;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
