@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation"; // ← IMPORTANTE para navegación
+import { useRouter } from "next/navigation";
 import "./style.css";
 import Image from "next/image"; // Importamos el componente Image de Next.js
+
 const Page = () => {
   const router = useRouter(); // ← Inicializamos el router
 
@@ -12,18 +13,18 @@ const Page = () => {
       <header className="header">
         <div className="logo">
           <span className="logo-text">
-            P<img src="/LOGO.svg" alt="Logo PostMe" className="logo-img" />
-            <span>ST</span>-Me
+            <img
+              className="logoimagen"
+              src="/Letrapost.png"
+              alt="Logo PostMe"
+            />
           </span>
         </div>
 
         <div className="buttons">
-          {/* Botón Regístrate */}
           <button className="btn" onClick={() => router.push("/Registropage")}>
             Regístrate
           </button>
-
-          {/* Botón Iniciar Sesión */}
           <button className="btn" onClick={() => router.push("/loginsesion")}>
             Iniciar Sesión
           </button>
@@ -31,10 +32,6 @@ const Page = () => {
       </header>
 
       <main className="main">
-        <div className="start-section">
-          <button className="start-btn">COMENZAR</button>
-        </div>
-
         <div className="image-section">
           <Image
             className="letrapost"
@@ -44,6 +41,13 @@ const Page = () => {
             height={400}
           />
         </div>
+        <div className="start-section-text">
+          <p className="inicio-descripcion">
+            La Plataforma exclusiva para estudiantes universitarios. <br />
+            Comparte, conecta y compra/vende con otros estudiantes.
+          </p>
+        </div>
+
         <img
           src="/inicio1.png"
           alt="Estatua con celular"
@@ -68,23 +72,44 @@ const Page = () => {
           </div>
         </div>
       </main>
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-section">
-            <h3>PostMe</h3>
-            <p>Conectando universitarios desde 2025.</p>
+
+      <footer className="footer-nuevo">
+        <div className="footer-top">
+          <nav className="footer-nav">
+            <a href="#">Blog</a>
+            <a href="#">Equipo</a>
+            <a href="#">Sobre Nosotros</a>
+            <a href="#">Testimonios</a>
+            <a href="#">Contacto</a>
+          </nav>
+          <div className="footer-icons">
+            <a href="">
+              <img src="/Logofacebook.png" alt="Facebook" />
+            </a>
+            <a href="">
+              <img src="/Logowhats.png" alt="Instagram" />
+            </a>
           </div>
-          <div className="footer-section">
-            <h4>Contacto</h4>
-            <p>Email: contacto@postme.com</p>
-            <p>Teléfono: +591 70000000</p>
-          </div>
-          <div className="footer-section">
-            <h4>Síguenos</h4>
-            <p>Instagram | Twitter | TikTok</p>
+          <div className="footer-info">
+            <p className="footer-title">Estamos en La Paz, Bolivia</p>
+            <p className="footer-sub">
+              Conectamos estudiantes de todo el país. ¡Únete ahora!
+            </p>
+            <div className="footer-contact">
+              <p>
+                <b>Email:</b> contacto@postme.com
+              </p>
+              <p>
+                <b>Tel:</b> +591 70000000
+              </p>
+              <p>
+                <b>Dirección:</b> Campus EMI, Av. Landaeta
+              </p>
+            </div>
           </div>
         </div>
         <div className="footer-bottom">
+          <img src="/Letrapost.png" alt="Logo" className="footer-logo" />
           <p>&copy; 2025 PostMe. Todos los derechos reservados.</p>
         </div>
       </footer>

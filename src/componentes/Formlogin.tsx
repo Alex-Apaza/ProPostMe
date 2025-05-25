@@ -1,80 +1,112 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { db } from "@/lib/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import "./Formlogin.css";
 
 const Formlogin = () => {
   const router = useRouter();
 
-  const [correo, setCorreo] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [mensaje, setMensaje] = useState('');
+  const [correo, setCorreo] = useState("");
+  const [contraseña, setContraseña] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!correo || !contraseña) {
-      setMensaje('Todos los campos son obligatorios.');
+      setMensaje("Todos los campos son obligatorios.");
       return;
     }
 
     try {
-      const usuariosRef = collection(db, 'usuarios');
-      const q = query(usuariosRef, where('correo_institucional', '==', correo));
-      const querySnapshot = await getDocs(q);
+      // 1. Verificar si es ADMIN
+      const adminRef = collection(db, "administradores");
+      const adminQuery = query(adminRef, where("correo", "==", correo));
+      const adminSnap = await getDocs(adminQuery);
 
-      if (querySnapshot.empty) {
-        setMensaje('Correo no registrado.');
+      if (!adminSnap.empty) {
+        const adminData = adminSnap.docs[0].data();
+        if (adminData.contraseña === contraseña) {
+          setMensaje("Bienvenido administrador. Redirigiendo...");
+          setTimeout(() => router.push("/admin"), 1500);
+          return;
+        } else {
+          setMensaje("Contraseña de administrador incorrecta.");
+          return;
+        }
+      }
+
+      // 2. Verificar como USUARIO normal
+      const usuariosRef = collection(db, "usuarios");
+      const userQuery = query(usuariosRef, where("correo_institucional", "==", correo));
+      const userSnap = await getDocs(userQuery);
+
+      if (userSnap.empty) {
+        setMensaje("Correo no registrado.");
         return;
       }
 
-      const userDoc = querySnapshot.docs[0];
+      const userDoc = userSnap.docs[0];
       const userData = userDoc.data();
 
       if (userData.contraseña !== contraseña) {
-        setMensaje('Contraseña incorrecta.');
+        setMensaje("Contraseña incorrecta.");
         return;
       }
 
-      // Login exitoso
-      setMensaje('Inicio de sesión exitoso. Redirigiendo...');
-      setTimeout(() => router.push('/Feed'), 2000);  // aquí redirige a page.tsx o página principal
+      // Guardar ID en localStorage
+      localStorage.setItem("usuarioId", userDoc.id);
+
+      setMensaje("Inicio de sesión exitoso. Redirigiendo...");
+      setTimeout(() => router.push("/Feed"), 1500);
+
     } catch (error) {
-      console.error('Error durante el login:', error);
-      setMensaje('Error en el servidor.');
+      console.error("Error durante el login:", error);
+      setMensaje("Error en el servidor.");
     }
   };
 
   return (
-    <div className="w-full max-w-md mx-auto my-10 p-6 bg-[#1110] text-white rounded-xl shadow-md border border-gray-700">
-      <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
-      {mensaje && <p className="text-center text-red-500 mb-4">{mensaje}</p>}
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        
+    <div className="login-container">
+      <h2 className="login-title">¡Bienvenido de nuevo!</h2>
+      <p className="login-subtitle">
+        Inicia sesión para continuar con tu experiencia universitaria
+      </p>
+      {mensaje && <p className="login-message">{mensaje}</p>}
+      <form onSubmit={handleSubmit} className="login-form">
+        <label className="login-label">Correo electrónico</label>
         <input
           type="email"
-          placeholder="Correo institucional"
+          placeholder="tu.correo@universidad.edu"
           value={correo}
           onChange={(e) => setCorreo(e.target.value)}
-          className="border p-2 rounded"
-          required
-        />
-        
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={contraseña}
-          onChange={(e) => setContraseña(e.target.value)}
-          className="border p-2 rounded"
+          className="login-input"
           required
         />
 
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded">
-          Iniciar Sesión
+        <label className="login-label">Contraseña</label>
+        <input
+          type="password"
+          placeholder="••••••••"
+          value={contraseña}
+          onChange={(e) => setContraseña(e.target.value)}
+          className="login-input"
+          required
+        />
+
+        <button type="submit" className="login-button">
+          Iniciar sesión
         </button>
       </form>
+      <p className="login-register">
+        ¿No tienes una cuenta?{" "}
+        <span onClick={() => router.push("/Registropage")} className="login-link">
+          Regístrate aquí
+        </span>
+      </p>
     </div>
   );
 };

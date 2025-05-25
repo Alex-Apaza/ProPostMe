@@ -1,7 +1,7 @@
 .arealogin{
     position: relative;
     left: 100px;
-    top: 200px;
+    top: 60px;
     padding-left: 30px ;
 }
 .flex{
@@ -25,6 +25,20 @@
     font-weight: bold;
     margin-top: 10px;
 }
+.login-wrapper {
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px;
+}
+
+/* Asegura que el formulario esté centrado verticalmente */
+.formlogin-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
 /* Mobile & tablet layout para login */
 @media (max-width: 768px) {
     .flex {
@@ -56,7 +70,68 @@
     }
   }
   
-  
+  .titulo-login {
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  margin-top: 20px;
+  max-width: 400px;
+}
+
+.subtitulo-login {
+  font-size: 16px;
+  color: #ccc;
+  margin-top: 10px;
+  max-width: 420px;
+  line-height: 1.4;
+}
+
+.grid-bloques {
+  display: grid;
+  grid-template-columns: repeat(2, 200px);
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.bloque-login {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid #4EDCD8;
+  border-radius: 12px;
+  padding: 15px;
+  color: white;
+}
+
+.bloque-login h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #4EDCD8;
+}
+
+.bloque-login p {
+  font-size: 14px;
+  color: #ddd;
+  margin-top: 5px;
+}
+
+/* Responsive (mobile) */
+@media (max-width: 768px) {
+  .grid-bloques {
+    grid-template-columns: 1fr;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .titulo-login {
+    text-align: center;
+    font-size: 24px;
+  }
+
+  .subtitulo-login {
+    text-align: center;
+    font-size: 14px;
+  }
+}
+
   @keyframes hero-gradient-animation {
     0% {
         --y-0: 90%;
