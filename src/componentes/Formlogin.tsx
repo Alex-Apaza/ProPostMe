@@ -22,16 +22,34 @@ const Formlogin = () => {
     }
 
     try {
-      const usuariosRef = collection(db, "usuarios");
-      const q = query(usuariosRef, where("correo_institucional", "==", correo));
-      const querySnapshot = await getDocs(q);
+      // 1. Verificar si es ADMIN
+      const adminRef = collection(db, "administradores");
+      const adminQuery = query(adminRef, where("correo", "==", correo));
+      const adminSnap = await getDocs(adminQuery);
 
-      if (querySnapshot.empty) {
+      if (!adminSnap.empty) {
+        const adminData = adminSnap.docs[0].data();
+        if (adminData.contraseña === contraseña) {
+          setMensaje("Bienvenido administrador. Redirigiendo...");
+          setTimeout(() => router.push("/admin"), 1500);
+          return;
+        } else {
+          setMensaje("Contraseña de administrador incorrecta.");
+          return;
+        }
+      }
+
+      // 2. Verificar como USUARIO normal
+      const usuariosRef = collection(db, "usuarios");
+      const userQuery = query(usuariosRef, where("correo_institucional", "==", correo));
+      const userSnap = await getDocs(userQuery);
+
+      if (userSnap.empty) {
         setMensaje("Correo no registrado.");
         return;
       }
 
-      const userDoc = querySnapshot.docs[0];
+      const userDoc = userSnap.docs[0];
       const userData = userDoc.data();
 
       if (userData.contraseña !== contraseña) {
@@ -39,8 +57,12 @@ const Formlogin = () => {
         return;
       }
 
+      // Guardar ID en localStorage
+      localStorage.setItem("usuarioId", userDoc.id);
+
       setMensaje("Inicio de sesión exitoso. Redirigiendo...");
-      setTimeout(() => router.push("/Feed"), 2000);
+      setTimeout(() => router.push("/Feed"), 1500);
+
     } catch (error) {
       console.error("Error durante el login:", error);
       setMensaje("Error en el servidor.");
@@ -81,10 +103,7 @@ const Formlogin = () => {
       </form>
       <p className="login-register">
         ¿No tienes una cuenta?{" "}
-        <span
-          onClick={() => router.push("/Registropage")}
-          className="login-link"
-        >
+        <span onClick={() => router.push("/Registropage")} className="login-link">
           Regístrate aquí
         </span>
       </p>
