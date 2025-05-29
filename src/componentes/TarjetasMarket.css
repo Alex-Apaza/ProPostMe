@@ -1,0 +1,191 @@
+.market-contenedor {
+  padding: 20px;
+}
+
+/* Filtros */
+.filtros {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filtros select {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Grid responsive con tarjetas más delgadas */
+.grid-tarjetas {
+  display: flex;
+  gap: 16px;
+  
+}
+
+/* Tarjeta compacta */
+.tarjeta {
+  background: white;
+  color: black;
+  border-radius: 10px;
+  min-width: 250px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  border-left: 6px solid #00d0ff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.tarjeta:hover {
+  transform: translateY(-3px);
+}
+
+/* Estado flotante */
+.etiqueta-estado {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #d0d0d0;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 2;
+}
+
+/* Imagen uniformada */
+.img-producto {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background-color: #f2f2f2;
+}
+
+/* Contenido */
+.contenido {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Título y precio */
+.titulo-precio {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.precio{
+    color: #0a7908;
+}
+/* Descripción */
+.descripcion {
+  font-size: 13px;
+  color: #555;
+  flex-grow: 1;
+}
+
+/* Fecha */
+.info-extra {
+  font-size: 11px;
+  color: gray;
+  margin-top: 4px;
+}
+
+/* Vendedor */
+.vendedor {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  gap: 6px;
+}
+
+/* Foto circular y fija */
+.foto-usuario {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Botón */
+.btn-contactar {
+  margin-left: auto;
+  background: #8c52ff;
+  color: white;
+  font-size: 12px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 1024px) {
+  .grid-tarjetas {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tarjeta {
+    min-width: 240px;
+    max-width: 300px;
+    margin-bottom: 16px;
+  }
+
+  .filtros {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .market-contenedor {
+    padding: 12px;
+  }
+
+  .grid-tarjetas {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tarjeta {
+    width: 100%;
+    max-width: 90%;
+  }
+
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .filtros select {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .tarjeta {
+    min-width: 90%;
+  }
+
+  .titulo-precio {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .btn-contactar {
+    font-size: 11px;
+    padding: 5px 8px;
+  }
+
+  .descripcion {
+    font-size: 12px;
+  }
+}

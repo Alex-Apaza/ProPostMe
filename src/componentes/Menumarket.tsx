@@ -5,7 +5,7 @@ import React from 'react'
 import Link from 'next/link'
 import './Menumarket.css'
 
-const categorias = ['Todos', 'Libros', 'Electrónicos', 'Muebles', 'Transporte', 'Apuntes', 'Ropa', 'Otros']
+const categorias = ['Todos', 'Libros', 'Electrónicos', 'Trabajos','Ropa y Accesorios', 'Otros']
 
 const MenuUnimarket = () => {
   return (

@@ -86,7 +86,7 @@ const Page = () => {
             <a href="">
               <img src="/Logofacebook.png" alt="Facebook" />
             </a>
-            <a href="">
+            <a href="https://wa.link/ai9e07">
               <img src="/Logowhats.png" alt="Instagram" />
             </a>
           </div>
@@ -100,10 +100,10 @@ const Page = () => {
                 <b>Email:</b> contacto@postme.com
               </p>
               <p>
-                <b>Tel:</b> +591 70000000
+                <b>Tel:</b> +591 76227643
               </p>
               <p>
-                <b>Dirección:</b> Campus EMI, Av. Landaeta
+                <b>Dirección:</b> Campus EMI, Av. Rafael Pabon, La Paz, Bolivia
               </p>
             </div>
           </div>
