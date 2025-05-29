@@ -1,17 +1,18 @@
 // componentes/TarjetasMarket.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  DocumentData,
-} from 'firebase/firestore';
-import Image from 'next/image';
-import './TarjetasMarket.css';
+import React, { useEffect, useState } from "react";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+import Image from "next/image";
+import "./TarjetasMarket.css";
+import Link from 'next/link';
+interface Props {
+  filtros: {
+    categoria: string;
+    precioMax: number;
+  };
+}
 
 interface Producto {
   id: string;
@@ -31,26 +32,26 @@ interface Producto {
   };
 }
 
-const TarjetasMarket = () => {
+const TarjetasMarket: React.FC<Props> = ({ filtros }) => {
   const [productos, setProductos] = useState<Producto[]>([]);
 
   useEffect(() => {
     const obtenerDatos = async () => {
-      const snapshot = await getDocs(collection(db, 'postmarket'));
+      const snapshot = await getDocs(collection(db, "postmarket"));
       const productosConUsuarios: Producto[] = [];
 
       for (const docSnap of snapshot.docs) {
-        const { id, ...dataSinId } = docSnap.data() as Producto;
-        const usuarioRef = doc(db, 'usuarios', dataSinId.usuarioId);
+        const data = docSnap.data() as Producto;
+        const usuarioRef = doc(db, "usuarios", data.usuarioId);
         const usuarioSnap = await getDoc(usuarioRef);
 
         const usuarioData = usuarioSnap.exists()
-          ? (usuarioSnap.data() as DocumentData)
-          : { nombre: 'Anónimo' };
+          ? usuarioSnap.data()
+          : { nombre: "Anónimo" };
 
         productosConUsuarios.push({
+          ...data,
           id: docSnap.id,
-          ...dataSinId,
           usuario: {
             nombre: usuarioData.nombre,
             fotoPerfil: usuarioData.fotoPerfil,
@@ -64,13 +65,20 @@ const TarjetasMarket = () => {
     obtenerDatos();
   }, []);
 
+  const productosFiltrados = productos.filter((p) => {
+    const coincideCategoria =
+      filtros.categoria === "Todos" || p.categoria === filtros.categoria;
+    const coincidePrecio = p.precio <= filtros.precioMax;
+    return coincideCategoria && coincidePrecio;
+  });
+
   return (
     <div className="grid-tarjetas">
-      {productos.map((p) => (
+      {productosFiltrados.map((p) => (
         <div key={p.id} className="tarjeta">
           <span className="etiqueta-estado">{p.estado}</span>
           <img
-            src={p.fotoUrl || '/default.jpg'}
+            src={p.fotoUrl || "/default.jpg"}
             alt="Producto"
             className="img-producto"
           />
@@ -85,14 +93,17 @@ const TarjetasMarket = () => {
             </p>
             <div className="vendedor">
               <Image
-                src={p.usuario?.fotoPerfil || '/Perfil.png'}
+                src={p.usuario?.fotoPerfil || "/Perfil.png"}
                 alt="Usuario"
                 width={24}
                 height={24}
                 className="foto-usuario"
               />
-              <span>{p.usuario?.nombre || 'Sin nombre'}</span>
-              <button className="btn-contactar">Contactar</button>
+              <span>{p.usuario?.nombre || "Sin nombre"}</span>
+              
+              <Link href={`/Infopost/${p.id}`} className="btn-contactar">
+                Ver Inf.
+              </Link>
             </div>
           </div>
         </div>
