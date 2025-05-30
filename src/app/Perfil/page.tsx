@@ -13,7 +13,7 @@ import { doc, getDoc } from "firebase/firestore";
 const Perfil = () => {
   const [usuario, setUsuario] = useState<any | null>(null);
   const [esMiPerfil, setEsMiPerfil] = useState(false);
-const [mostrarEditor, setMostrarEditor] = useState(false);
+  const [mostrarEditor, setMostrarEditor] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -45,12 +45,10 @@ const [mostrarEditor, setMostrarEditor] = useState(false);
   if (!usuario) {
     return (
       <div className="text-center mt-6 text-zinc-500">
-        No se pudo cargar el perfil. ¿Estás logueado?
+        Perame bro estoy cargando tu perfil....
       </div>
     );
   }
-
-  
 
   return (
     <>
@@ -67,66 +65,69 @@ const [mostrarEditor, setMostrarEditor] = useState(false);
           />
         </div>
 
-        {/* Foto perfil */}
-        <div className="foto-perfil-container">
+        {/* Cabecera horizontal */}
+        <div className="perfil-header">
+          {/* Foto perfil */}
           <Image
             src={usuario.fotoPerfil || "/Perfil.png"}
             alt="Perfil"
             width={120}
             height={120}
             className="foto-perfil"
+            objectFit="cover"
             onClick={() => {
               if (esMiPerfil && !usuario.fotoPerfil) {
                 router.push("/seleccionar-foto");
               }
             }}
           />
-        </div>
 
-        {/* Info */}
-        <div className="perfil-info">
-          <h2>
-            {usuario.nombre} {usuario.apellido}
-          </h2>
-          <p>{usuario.universidadNombre || "Universidad no registrada"}</p>
-          <p>Fecha de nacimiento: {usuario.fecha_nacimiento}</p>
-          <p>{usuario.carrera || "Carrera no especificada"}</p>
+          {/* Info usuario */}
+          <div className="info-nombre">
+            <h2>{usuario.nombre} {usuario.apellido}</h2>
+            <p>{usuario.universidadNombre || "Universidad no registrada"}</p>
+            <p>{usuario.carrera || "Carrera no especificada"}</p>
+            <p>Fecha de nacimiento: {usuario.fecha_nacimiento}</p>
 
-          <div className="perfil-detalles">
-            <h3>Acerca de mí</h3>
-            <p>{usuario.descripcion || "Agrega una descripción personal."}</p>
+            {esMiPerfil && (
+              <button
+                onClick={() => setMostrarEditor(true)}
+                className="btn-editar-perfil"
+              >
+                Editar perfil
+              </button>
+            )}
           </div>
-
-          {esMiPerfil && (
-            <button
-              onClick={() => setMostrarEditor(true)}
-              className="btn-editar-perfil mt-3 bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-            >
-              Editar perfil
-            </button>
-          )}
         </div>
 
+        {/* Descripción */}
+        <div className="perfil-detalles">
+          <h3>Acerca de mí</h3>
+          <p>{usuario.descripcion || "Agrega una descripción personal."}</p>
+        </div>
+
+        {/* Crear post */}
         {esMiPerfil && (
           <div className="perfil-posts">
             <Crearpost />
           </div>
         )}
       </div>
-      {mostrarEditor && (
-  <div className="editor-flotante-overlay">
-    <div className="editor-flotante">
-      <EditorPerfil />
-      <button
-        onClick={() => setMostrarEditor(false)}
-        className="cerrar-editor absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-      >
-        ✖
-      </button>
-    </div>
-  </div>
-)}
 
+      {/* Editor flotante */}
+      {mostrarEditor && (
+        <div className="editor-flotante-overlay">
+          <div className="editor-flotante">
+            <EditorPerfil />
+            <button
+              onClick={() => setMostrarEditor(false)}
+              className="cerrar-editor absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+            >
+              ✖
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

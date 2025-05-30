@@ -8,13 +8,23 @@ import {
   collection,
   orderBy,
   addDoc,
+  getCountFromServer,
+  doc,
+  getDoc,
+  deleteDoc,
+  setDoc,
 } from "firebase/firestore";
-import { doc, getDoc, deleteDoc, setDoc } from "firebase/firestore";
 
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
-import { getCountFromServer } from "firebase/firestore";
 import Comentario from "@/componentes/Comentario";
+import "./Cardpost.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faThumbsUp,
+  faComment,
+  faShare,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface Post {
   id: string;
@@ -24,6 +34,7 @@ interface Post {
   fecha: Date;
   usuarioId: string;
   totalLikes: number;
+  incognito?: boolean;
 }
 
 interface Usuario {
@@ -35,13 +46,18 @@ interface Usuario {
 const Cardpost = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [usuarios, setUsuarios] = useState<Record<string, Usuario>>({});
+  const [menuAbierto, setMenuAbierto] = useState<string | null>(null);
+  const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(
+    null
+  );
+  const [ocultosActuales, setOcultosActuales] = useState<string[]>([]);
 
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("fecha", "desc"));
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const tempPosts: Post[] = [];
-      const tempUsuarios: Record<string, Usuario> = { ...usuarios }; // mantenemos cache
+      const tempUsuarios: Record<string, Usuario> = { ...usuarios };
 
       for (const docSnap of snapshot.docs) {
         const post = docSnap.data();
@@ -50,6 +66,7 @@ const Cardpost = () => {
           collection(db, "posts", docSnap.id, "likes")
         );
         const totalLikes = likesSnapshot.data().count || 0;
+
         tempPosts.push({
           id: docSnap.id,
           contenido: post.contenido,
@@ -58,6 +75,7 @@ const Cardpost = () => {
           fecha,
           usuarioId: post.usuarioId || "desconocido",
           totalLikes,
+          incognito: post.incognito || false,
         });
 
         const uid = post.usuarioId;
@@ -78,10 +96,13 @@ const Cardpost = () => {
       setUsuarios(tempUsuarios);
     });
 
-    return () => unsubscribe(); // limpiamos listener al desmontar
+    return () => unsubscribe();
   }, []);
-  const [menuAbierto, setMenuAbierto] = useState<string | null>(null);
-const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(null);
+
+  useEffect(() => {
+    const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
+    setOcultosActuales(ocultos);
+  }, []);
 
   const toggleMenu = (postId: string) => {
     setMenuAbierto(menuAbierto === postId ? null : postId);
@@ -92,7 +113,6 @@ const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(nu
     usuarioReportado: string
   ) => {
     const usuarioQueReporta = localStorage.getItem("usuarioId") || "anonimo";
-
     await addDoc(collection(db, "reportes_publicaciones"), {
       postId,
       usuarioReportado,
@@ -100,35 +120,15 @@ const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(nu
       motivo: "Contenido inapropiado",
       fecha: new Date(),
     });
-
     alert("Publicación reportada correctamente");
   };
 
-  const reportarUsuario = async (usuarioReportado: string) => {
-    const usuarioQueReporta = localStorage.getItem("usuarioId") || "anonimo";
-
-    await addDoc(collection(db, "reportes_usuarios"), {
-      usuarioReportado,
-      usuarioQueReporta,
-      motivo: "Comportamiento ofensivo",
-      fecha: new Date(),
-    });
-
-    alert("Usuario reportado correctamente");
-  };
-
-  // OCULTAR PUBLICACION
   const ocultarPublicacion = (postId: string) => {
     const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
     localStorage.setItem("postsOcultos", JSON.stringify([...ocultos, postId]));
     setOcultosActuales((prev) => [...prev, postId]);
   };
-  const [ocultosActuales, setOcultosActuales] = useState<string[]>([]);
 
-  useEffect(() => {
-    const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
-    setOcultosActuales(ocultos);
-  }, []);
   const deshacerOcultar = (postId: string) => {
     const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
     const actualizados = ocultos.filter((id: string) => id !== postId);
@@ -136,35 +136,54 @@ const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(nu
     setOcultosActuales(actualizados);
   };
 
-  // LIKE PUBLICACION
   const toggleLike = async (postId: string) => {
     const usuarioId = localStorage.getItem("usuarioId");
     if (!usuarioId) return;
 
     const likeRef = doc(db, "posts", postId, "likes", usuarioId);
     const likeSnap = await getDoc(likeRef);
+    if (likeSnap.exists()) await deleteDoc(likeRef);
+    else await setDoc(likeRef, { timestamp: new Date() });
+  };
 
-    if (likeSnap.exists()) {
-      await deleteDoc(likeRef); // quitar like
-    } else {
-      await setDoc(likeRef, { timestamp: new Date() }); // dar like
-    }
+  const compartirPost = async (post: Post) => {
+    const usuarioId = localStorage.getItem("usuarioId");
+    if (!usuarioId) return alert("Debes iniciar sesión para compartir.");
+
+    await addDoc(collection(db, "posts"), {
+      contenido: post.contenido,
+      mediaUrl: post.mediaUrl,
+      mediaTipo: post.mediaTipo,
+      fecha: new Date(),
+      usuarioId,
+      postOriginalId: post.id,
+      incognito: false,
+    });
+
+    alert("¡Publicación compartida!");
   };
 
   return (
     <div className="flex flex-col gap-6 mt-4">
       {posts.map((post) => {
-        const usuario = usuarios[post.usuarioId] || {
-          nombre: "Usuario",
-          apellido: "Anónimo",
-          fotoPerfil: "",
-        };
+        const isIncognito = post.incognito === true;
+        const usuario = isIncognito
+          ? {
+              nombre: "Usuario",
+              apellido: "Incógnito",
+              fotoPerfil: "/Perfilincognito.jpg",
+            }
+          : usuarios[post.usuarioId] || {
+              nombre: "Usuario",
+              apellido: "Anónimo",
+              fotoPerfil: "/Perfil.png",
+            };
 
         const tiempoRelativo = formatDistanceToNow(post.fecha, {
           addSuffix: true,
           locale: es,
         });
-        // Si está oculto, mostrar la tarjeta reducida
+
         if (ocultosActuales.includes(post.id)) {
           return (
             <div
@@ -181,35 +200,33 @@ const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(nu
             </div>
           );
         }
-        // Comentarios
-       
 
         return (
-          <div
-            key={post.id}
-            className="max-w-xl w-full rounded-lg bg-white dark:bg-zinc-900 shadow-md overflow-hidden"
-          >
-            {/* Encabezado */}
-            <div className="flex items-center justify-between p-4 relative">
-              <div className="flex items-center gap-3">
-                <img
-                  src={usuario.fotoPerfil || "/Perfil.png"}
-                  alt="avatar"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
+          <div key={post.id} className="post-card">
+            <div className="post-header">
+              <div className="post-user">
+                {usuario.fotoPerfil ? (
+                  <img
+                    src={usuario.fotoPerfil}
+                    alt="avatar"
+                    className="user-avatar"
+                  />
+                ) : (
+                  <img src="/Perfil.png" alt="avatar" className="user-avatar" />
+                )}
+
                 <div>
-                  <div className="font-semibold text-zinc-900 dark:text-white">
+                  <div className="user-nombre">
                     {usuario.nombre} {usuario.apellido}
                   </div>
-                  <div className="text-sm text-zinc-500">{tiempoRelativo}</div>
+                  <div className="user-fecha">{tiempoRelativo}</div>
                 </div>
               </div>
 
-              {/* Botón de opciones */}
-              <div className="relative">
+              <div className="post-menu">
                 <button
-                  className="w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-zinc-700"
-                  onClick={() => toggleMenu(post.id)} // función que controlaremos
+                  className="menu-btn"
+                  onClick={() => toggleMenu(post.id)}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor">
                     <path
@@ -221,24 +238,17 @@ const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(nu
                 </button>
 
                 {menuAbierto === post.id && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
-                    <ul className="text-sm text-zinc-700">
+                  <div className="menu-opciones">
+                    <ul>
                       <li
-                        className="px-4 py-2 hover:bg-zinc-100 cursor-pointer"
                         onClick={() =>
                           reportarPublicacion(post.id, post.usuarioId)
                         }
                       >
                         Reportar publicación
                       </li>
-
-                      <li className="px-4 py-2 hover:bg-zinc-100 cursor-pointer">
-                        Bloquear usuario
-                      </li>
-                      <li
-                        className="px-4 py-2 hover:bg-zinc-100 cursor-pointer"
-                        onClick={() => ocultarPublicacion(post.id)}
-                      >
+                      <li>Bloquear usuario</li>
+                      <li onClick={() => ocultarPublicacion(post.id)}>
                         Ocultar publicación
                       </li>
                     </ul>
@@ -247,60 +257,49 @@ const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(nu
               </div>
             </div>
 
-            {/* Contenido */}
-            <div className="px-4 pb-4">
-              <p className="mb-4 text-zinc-800 dark:text-zinc-100">
-                {post.contenido}
-              </p>
+            <div className="post-content">
+              <p className="post-text">{post.contenido}</p>
 
               {post.mediaUrl && (
-                <div className="w-full aspect-[4/3] rounded-md overflow-hidden mb-4">
+                <div className="post-media">
                   {post.mediaTipo === "video" ? (
                     <video
                       src={post.mediaUrl}
                       controls
-                      className="w-full h-full object-cover"
+                      className="media-item"
                     />
                   ) : (
                     <img
                       src={post.mediaUrl}
                       alt="media"
-                      className="w-full h-full object-cover"
+                      className="media-item"
                     />
                   )}
                 </div>
               )}
-             
 
-              {/* Acciones */}
-              <div className="flex justify-around text-sm text-zinc-600 dark:text-zinc-300 border-t pt-3">
-                
-
-                <button
-                  className="flex items-center gap-2 hover:text-blue-500 text-white"
-                  onClick={() => toggleLike(post.id)}
-                >
-                  👍 Me gusta{" "}
+              <div className="post-acciones">
+                <button onClick={() => toggleLike(post.id)}>
+                  <FontAwesomeIcon icon={faThumbsUp} /> Me gusta{" "}
                   {post.totalLikes > 0 && <span>({post.totalLikes})</span>}
                 </button>
-
                 <button
-                  className="flex items-center gap-2 hover:text-blue-500"
                   onClick={() =>
                     setComentariosAbiertos(
                       post.id === comentariosAbiertos ? null : post.id
                     )
                   }
                 >
-                  💬 Comentar
+                  <FontAwesomeIcon icon={faComment} /> Comentar
                 </button>
-
-                <button className="flex items-center gap-2 hover:text-blue-500">
-                  🔁 Compartir
+                <button onClick={() => compartirPost(post)}>
+                  <FontAwesomeIcon icon={faShare} /> Compartir
                 </button>
               </div>
-               {/* Comentarios */}
-              {comentariosAbiertos === post.id && <Comentario postId={post.id} />}
+
+              {comentariosAbiertos === post.id && (
+                <Comentario postId={post.id} />
+              )}
             </div>
           </div>
         );

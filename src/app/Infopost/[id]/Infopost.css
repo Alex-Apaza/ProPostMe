@@ -12,12 +12,14 @@
 }
 
 .imagen-grande img {
-  width: 420px;
-  max-height: 420px;
+  width: 620px;
+  max-height: 620px;
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   transition: transform 0.3s ease;
+  object-fit: contain;
+  background-color: #605c5c;
 }
 
 .imagen-grande img:hover {
@@ -26,6 +28,7 @@
 
 .detalles {
   max-width: 480px;
+  width: 100%;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   padding: 24px;
