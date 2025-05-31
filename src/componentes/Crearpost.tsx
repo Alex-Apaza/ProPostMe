@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import './Crearpost.css';
 import { db } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 
 const Crearpost = () => {
   const [contenido, setContenido] = useState('');
@@ -13,11 +13,29 @@ const Crearpost = () => {
   const [mensaje, setMensaje] = useState('');
   const [cargando, setCargando] = useState(false);
 
+  const [usuario, setUsuario] = useState<any>(null);
+const [modoIncognito, setModoIncognito] = useState(false);
+
+  useEffect(() => {
+    const fetchUsuario = async () => {
+      const usuarioId = localStorage.getItem('usuarioId');
+      if (!usuarioId) return;
+
+      const ref = doc(db, 'usuarios', usuarioId);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        setUsuario(snap.data());
+      }
+    };
+
+    fetchUsuario();
+  }, []);
+
   const handleArchivo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setArchivo(file);
-      setPreview(URL.createObjectURL(file)); // Para mostrar vista previa
+      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -51,10 +69,9 @@ const Crearpost = () => {
         contenido,
         mediaUrl,
         mediaTipo: tipo,
-        incognito: false, // para usar más adelante
+      incognito: modoIncognito,
         fecha: new Date(),
         usuarioId: localStorage.getItem('usuarioId') || 'anonimo-demo',
-
       });
 
       setMensaje('¡Publicado!');
@@ -74,7 +91,7 @@ const Crearpost = () => {
       <div className='llenado'>
         <Image
           className='Fotoperfil'
-          src='/Perfil.png'
+          src={usuario?.fotoPerfil || '/Perfil.png'}
           width={30}
           height={30}
           alt='Foto perfil'
@@ -88,6 +105,8 @@ const Crearpost = () => {
         />
       </div>
 
+      
+
       {preview && (
         <div className='preview mt-2'>
           {archivo?.type.startsWith('video') ? (
@@ -98,32 +117,21 @@ const Crearpost = () => {
         </div>
       )}
 
-      <div className='multincog'>
-        <div className='addmulti'>
-          <label className='cursor-pointer'>
-            <div>Agregar Foto/Video</div>
-            <Image
-              className='addimagen'
-              src='/multi.png'
-              width={30}
-              height={30}
-              alt='Multimedia'
-            />
-            <input type='file' accept='image/*,video/*' onChange={handleArchivo} hidden />
-          </label>
-        </div>
+      <div className="multincog">
+        <label className="boton-post-opcion cursor-pointer">
+          <Image src="/multi.png" width={20} height={20} alt="Multimedia" />
+          <span>Foto/Video</span>
+          <input type="file" accept="image/*,video/*" onChange={handleArchivo} hidden />
+        </label>
 
-        <div className='incognito'>
-          <div>Post Incógnito</div>
-          <Image
-            className='postinc'
-            src='/incognito.png'
-            width={30}
-            height={30}
-            alt='Modo incognito'
-          />
-          {/* Agregar switch más adelante */}
-        </div>
+        <div
+  className={`boton-post-opcion cursor-pointer ${modoIncognito ? 'activo' : ''}`}
+  onClick={() => setModoIncognito(!modoIncognito)}
+>
+  <Image src="/incognito.png" width={20} height={20} alt="Incógnito" />
+  <span>{modoIncognito ? 'Incógnito activado' : 'Incógnito'}</span>
+</div>
+
       </div>
 
       <div className='publicar-btn mt-2'>

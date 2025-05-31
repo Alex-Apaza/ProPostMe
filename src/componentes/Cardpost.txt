@@ -1,0 +1,160 @@
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-card {
+  max-width: 600px;
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  animation: fadeInUp 0.5s ease-out;
+  box-shadow: 0 0 12px rgba(100, 105, 105, 0.3);
+  border: 1px solid #4EDCD8;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 8px auto;
+  position: relative;
+  z-index: 1; /* ✅ Por defecto */
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(78, 220, 216, 0.6);
+  z-index: 10; /* ✅ Se eleva sobre las demás sin causar glitch */
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+}
+
+.post-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-nombre {
+  font-weight: bold;
+  color: #111;
+}
+
+.user-fecha {
+  font-size: 12px;
+  color: #666;
+}
+
+.post-menu {
+  position: relative;
+}
+
+.menu-btn {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
+.menu-btn:hover {
+  color: #000;
+}
+
+.menu-opciones {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: #fff;
+  color: black;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 10;
+}
+
+.menu-opciones ul {
+  list-style: none;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.menu-opciones li {
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu-opciones li:hover {
+  background-color: #f0f0f0;
+}
+
+.post-content {
+  padding: 0 16px 16px;
+}
+
+.post-text {
+  color: #111;
+  margin-bottom: 16px;
+}
+
+.post-media {
+  width: 100%;
+  aspect-ratio: 4 / 3; /* mantiene proporción estándar */
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+}
+
+.media-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ✅ esto rellena sin recortes laterales grises */
+  border-radius: 10px;
+}
+
+.post-acciones {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid #e2e2e2;
+  padding-top: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.post-acciones button {
+  background: none;
+  border: none;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.post-acciones button:hover {
+  color: #4EDCD8;
+}

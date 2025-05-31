@@ -1,21 +1,18 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { db } from "@/lib/firebase";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
-  onSnapshot,
-  query,
-  collection,
-  orderBy,
-  addDoc,
-} from "firebase/firestore";
-import { doc, getDoc, deleteDoc, setDoc } from "firebase/firestore";
-
-import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
-import { getCountFromServer } from "firebase/firestore";
-import Comentario from "@/componentes/Comentario";
-
+  collection, query, orderBy, onSnapshot, getDoc, doc,
+  addDoc, deleteDoc, setDoc, getCountFromServer
+} from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { formatDistanceToNow } from 'date-fns';
+import { es } from 'date-fns/locale';
+import Comentario from '@/componentes/Comentario';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp, faComment, faShare, faFlag, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
 interface Post {
   id: string;
   contenido: string;
@@ -24,6 +21,7 @@ interface Post {
   fecha: Date;
   usuarioId: string;
   totalLikes: number;
+  incognito?: boolean;
 }
 
 interface Usuario {
@@ -35,40 +33,52 @@ interface Usuario {
 const Cardpost = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [usuarios, setUsuarios] = useState<Record<string, Usuario>>({});
+  const [menuAbierto, setMenuAbierto] = useState<string | null>(null);
+  const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(null);
+  const [ocultosActuales, setOcultosActuales] = useState<string[]>([]);
+  const [likesUsuario, setLikesUsuario] = useState<Record<string, boolean>>({});
+  const router = useRouter();
+  const usuarioActual = typeof window !== 'undefined' ? localStorage.getItem('usuarioId') : null;
 
   useEffect(() => {
-    const q = query(collection(db, "posts"), orderBy("fecha", "desc"));
-
+    const q = query(collection(db, 'posts'), orderBy('fecha', 'desc'));
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const tempPosts: Post[] = [];
-      const tempUsuarios: Record<string, Usuario> = { ...usuarios }; // mantenemos cache
+      const tempUsuarios: Record<string, Usuario> = { ...usuarios };
+      const tempLikes: Record<string, boolean> = {};
 
       for (const docSnap of snapshot.docs) {
         const post = docSnap.data();
         const fecha = post.fecha?.toDate() || new Date();
-        const likesSnapshot = await getCountFromServer(
-          collection(db, "posts", docSnap.id, "likes")
-        );
-        const totalLikes = likesSnapshot.data().count || 0;
+        const postId = docSnap.id;
+        const likesSnapshot = await getCountFromServer(collection(db, 'posts', postId, 'likes'));
+
+        // ¿Ya le dio like?
+        if (usuarioActual) {
+          const likeRef = doc(db, 'posts', postId, 'likes', usuarioActual);
+          const likeSnap = await getDoc(likeRef);
+          tempLikes[postId] = likeSnap.exists();
+        }
+
         tempPosts.push({
-          id: docSnap.id,
+          id: postId,
           contenido: post.contenido,
           mediaUrl: post.mediaUrl,
           mediaTipo: post.mediaTipo,
           fecha,
-          usuarioId: post.usuarioId || "desconocido",
-          totalLikes,
+          usuarioId: post.usuarioId || 'desconocido',
+          totalLikes: likesSnapshot.data().count || 0,
+          incognito: post.incognito || false,
         });
 
-        const uid = post.usuarioId;
-        if (uid && !tempUsuarios[uid]) {
-          const usuarioSnap = await getDoc(doc(db, "usuarios", uid));
-          if (usuarioSnap.exists()) {
-            const userData = usuarioSnap.data();
-            tempUsuarios[uid] = {
-              nombre: userData.nombre,
-              apellido: userData.apellido,
-              fotoPerfil: userData.fotoPerfil || "",
+        if (post.usuarioId && !tempUsuarios[post.usuarioId]) {
+          const userSnap = await getDoc(doc(db, 'usuarios', post.usuarioId));
+          if (userSnap.exists()) {
+            const data = userSnap.data();
+            tempUsuarios[post.usuarioId] = {
+              nombre: data.nombre,
+              apellido: data.apellido,
+              fotoPerfil: data.fotoPerfil || '',
             };
           }
         }
@@ -76,230 +86,149 @@ const Cardpost = () => {
 
       setPosts(tempPosts);
       setUsuarios(tempUsuarios);
+      setLikesUsuario(tempLikes);
     });
 
-    return () => unsubscribe(); // limpiamos listener al desmontar
+    return () => unsubscribe();
   }, []);
-  const [menuAbierto, setMenuAbierto] = useState<string | null>(null);
-const [comentariosAbiertos, setComentariosAbiertos] = useState<string | null>(null);
-
-  const toggleMenu = (postId: string) => {
-    setMenuAbierto(menuAbierto === postId ? null : postId);
-  };
-
-  const reportarPublicacion = async (
-    postId: string,
-    usuarioReportado: string
-  ) => {
-    const usuarioQueReporta = localStorage.getItem("usuarioId") || "anonimo";
-
-    await addDoc(collection(db, "reportes_publicaciones"), {
-      postId,
-      usuarioReportado,
-      usuarioQueReporta,
-      motivo: "Contenido inapropiado",
-      fecha: new Date(),
-    });
-
-    alert("Publicación reportada correctamente");
-  };
-
-  const reportarUsuario = async (usuarioReportado: string) => {
-    const usuarioQueReporta = localStorage.getItem("usuarioId") || "anonimo";
-
-    await addDoc(collection(db, "reportes_usuarios"), {
-      usuarioReportado,
-      usuarioQueReporta,
-      motivo: "Comportamiento ofensivo",
-      fecha: new Date(),
-    });
-
-    alert("Usuario reportado correctamente");
-  };
-
-  // OCULTAR PUBLICACION
-  const ocultarPublicacion = (postId: string) => {
-    const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
-    localStorage.setItem("postsOcultos", JSON.stringify([...ocultos, postId]));
-    setOcultosActuales((prev) => [...prev, postId]);
-  };
-  const [ocultosActuales, setOcultosActuales] = useState<string[]>([]);
 
   useEffect(() => {
-    const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
+    const ocultos = JSON.parse(localStorage.getItem('postsOcultos') || '[]');
     setOcultosActuales(ocultos);
   }, []);
-  const deshacerOcultar = (postId: string) => {
-    const ocultos = JSON.parse(localStorage.getItem("postsOcultos") || "[]");
-    const actualizados = ocultos.filter((id: string) => id !== postId);
-    localStorage.setItem("postsOcultos", JSON.stringify(actualizados));
-    setOcultosActuales(actualizados);
-  };
 
-  // LIKE PUBLICACION
   const toggleLike = async (postId: string) => {
-    const usuarioId = localStorage.getItem("usuarioId");
-    if (!usuarioId) return;
-
-    const likeRef = doc(db, "posts", postId, "likes", usuarioId);
+    if (!usuarioActual) return;
+    const likeRef = doc(db, 'posts', postId, 'likes', usuarioActual);
     const likeSnap = await getDoc(likeRef);
 
     if (likeSnap.exists()) {
-      await deleteDoc(likeRef); // quitar like
+      await deleteDoc(likeRef);
     } else {
-      await setDoc(likeRef, { timestamp: new Date() }); // dar like
+      await setDoc(likeRef, { timestamp: new Date() });
     }
   };
 
-  return (
-    <div className="flex flex-col gap-6 mt-4">
-      {posts.map((post) => {
-        const usuario = usuarios[post.usuarioId] || {
-          nombre: "Usuario",
-          apellido: "Anónimo",
-          fotoPerfil: "",
-        };
+  const compartirPost = async (post: Post) => {
+    if (!usuarioActual) return alert('Debes iniciar sesión para compartir.');
+    await addDoc(collection(db, 'posts'), {
+      contenido: post.contenido,
+      mediaUrl: post.mediaUrl,
+      mediaTipo: post.mediaTipo,
+      fecha: new Date(),
+      usuarioId: usuarioActual,
+      postOriginalId: post.id,
+      incognito: false,
+    });
+    alert('¡Publicación compartida!');
+  };
 
-        const tiempoRelativo = formatDistanceToNow(post.fecha, {
-          addSuffix: true,
-          locale: es,
-        });
-        // Si está oculto, mostrar la tarjeta reducida
+  const ocultarPublicacion = (postId: string) => {
+    const nuevos = [...ocultosActuales, postId];
+    localStorage.setItem('postsOcultos', JSON.stringify(nuevos));
+    setOcultosActuales(nuevos);
+  };
+
+  const deshacerOcultar = (postId: string) => {
+    const nuevos = ocultosActuales.filter(id => id !== postId);
+    localStorage.setItem('postsOcultos', JSON.stringify(nuevos));
+    setOcultosActuales(nuevos);
+  };
+
+  const reportarPublicacion = async (postId: string, usuarioReportado: string) => {
+    if (!usuarioActual) return;
+    await addDoc(collection(db, 'reportes_publicaciones'), {
+      postId,
+      usuarioReportado,
+      usuarioQueReporta: usuarioActual,
+      motivo: 'Contenido inapropiado',
+      fecha: new Date(),
+    });
+    alert('Publicación reportada.');
+  };
+
+  const irAlPerfil = (usuarioId: string) => {
+    if (!usuarioActual) return;
+    if (usuarioId === usuarioActual) router.push('/Perfil');
+    else router.push(`/Vistaperfil/${usuarioId}`);
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-6 px-4 py-4 w-full">
+      {posts.map(post => {
+        const usuario = post.incognito
+          ? { nombre: 'Usuario', apellido: 'Incógnito', fotoPerfil: '/Perfilincognito.jpg' }
+          : usuarios[post.usuarioId] || { nombre: 'Usuario', apellido: 'Anónimo', fotoPerfil: '/Perfil.png' };
+
+        const tiempoRelativo = formatDistanceToNow(post.fecha, { addSuffix: true, locale: es });
+
         if (ocultosActuales.includes(post.id)) {
           return (
-            <div
-              key={post.id}
-              className="max-w-xl w-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 p-4 rounded-lg shadow"
-            >
-              <p className="text-sm">Has ocultado esta publicación.</p>
-              <button
-                onClick={() => deshacerOcultar(post.id)}
-                className="text-blue-600 hover:underline mt-2 text-sm"
-              >
-                Deshacer
-              </button>
+            <div key={post.id} className="w-full max-w-xl bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg shadow text-sm text-zinc-700">
+              <p>Publicación oculta.</p>
+              <button onClick={() => deshacerOcultar(post.id)} className="text-blue-500 hover:underline mt-2">Anular</button>
             </div>
           );
         }
-        // Comentarios
-       
 
         return (
-          <div
-            key={post.id}
-            className="max-w-xl w-full rounded-lg bg-white dark:bg-zinc-900 shadow-md overflow-hidden"
-          >
+          <div key={post.id} className="max-w-xl w-full bg-white border border-[#4EDCD8] rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1">
             {/* Encabezado */}
-            <div className="flex items-center justify-between p-4 relative">
-              <div className="flex items-center gap-3">
-                <img
-                  src={usuario.fotoPerfil || "/Perfil.png"}
-                  alt="avatar"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
+            <div className="flex justify-between items-start p-4">
+              <div className="flex gap-3 items-center cursor-pointer" onClick={() => irAlPerfil(post.usuarioId)}>
+                <img src={usuario.fotoPerfil || '/Perfil.png'} alt="avatar" className="w-10 h-10 rounded-full object-cover" />
                 <div>
-                  <div className="font-semibold text-zinc-900 dark:text-white">
-                    {usuario.nombre} {usuario.apellido}
-                  </div>
-                  <div className="text-sm text-zinc-500">{tiempoRelativo}</div>
+                  <p className="font-semibold text-zinc-800">{usuario.nombre} {usuario.apellido}</p>
+                  <p className="text-xs text-zinc-500">{tiempoRelativo}</p>
                 </div>
               </div>
-
-              {/* Botón de opciones */}
-              <div className="relative">
-                <button
-                  className="w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-zinc-700"
-                  onClick={() => toggleMenu(post.id)} // función que controlaremos
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor">
-                    <path
-                      d="M6 12h.01M12 12h.01M18 12h.01"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </button>
-
-                {menuAbierto === post.id && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
-                    <ul className="text-sm text-zinc-700">
-                      <li
-                        className="px-4 py-2 hover:bg-zinc-100 cursor-pointer"
-                        onClick={() =>
-                          reportarPublicacion(post.id, post.usuarioId)
-                        }
-                      >
-                        Reportar publicación
-                      </li>
-
-                      <li className="px-4 py-2 hover:bg-zinc-100 cursor-pointer">
-                        Bloquear usuario
-                      </li>
-                      <li
-                        className="px-4 py-2 hover:bg-zinc-100 cursor-pointer"
-                        onClick={() => ocultarPublicacion(post.id)}
-                      >
-                        Ocultar publicación
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
+              <button
+                className="text-zinc-400 hover:text-zinc-800 font-bold"
+                onClick={() => setMenuAbierto(menuAbierto === post.id ? null : post.id)}
+              >...</button>
+              {menuAbierto === post.id && (
+                <div className="absolute bg-white border shadow-md right-4 mt-10 rounded-md z-50 text-sm">
+                  <ul className="py-2 px-3 space-y-2">
+                    <li className="cursor-pointer hover:text-red-500" onClick={() => reportarPublicacion(post.id, post.usuarioId)}>
+                      <FontAwesomeIcon icon={faFlag} /> Reportar publicación
+                    </li>
+                    <li className="cursor-pointer hover:text-red-500" onClick={() => alert('Pendiente: bloqueo')}>
+                      🚫 Bloquear usuario
+                    </li>
+                    <li className="cursor-pointer hover:text-zinc-600" onClick={() => ocultarPublicacion(post.id)}>
+                      <FontAwesomeIcon icon={faEyeSlash} /> Ocultar publicación
+                    </li>
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* Contenido */}
             <div className="px-4 pb-4">
-              <p className="mb-4 text-zinc-800 dark:text-zinc-100">
-                {post.contenido}
-              </p>
-
+              <p className="text-zinc-800 mb-4">{post.contenido}</p>
               {post.mediaUrl && (
-                <div className="w-full aspect-[4/3] rounded-md overflow-hidden mb-4">
-                  {post.mediaTipo === "video" ? (
-                    <video
-                      src={post.mediaUrl}
-                      controls
-                      className="w-full h-full object-cover"
-                    />
+                <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-zinc-200">
+                  {post.mediaTipo === 'video' ? (
+                    <video src={post.mediaUrl} controls className="w-full h-full object-cover" />
                   ) : (
-                    <img
-                      src={post.mediaUrl}
-                      alt="media"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={post.mediaUrl} alt="media" className="w-full h-full object-cover" />
                   )}
                 </div>
               )}
-             
 
               {/* Acciones */}
-              <div className="flex justify-around text-sm text-zinc-600 dark:text-zinc-300 border-t pt-3">
-                
-
-                <button
-                  className="flex items-center gap-2 hover:text-blue-500 text-white"
-                  onClick={() => toggleLike(post.id)}
-                >
-                  👍 Me gusta{" "}
-                  {post.totalLikes > 0 && <span>({post.totalLikes})</span>}
+              <div className="flex justify-around border-t pt-3 text-sm text-zinc-600">
+                <button onClick={() => toggleLike(post.id)} className={`flex items-center gap-1 ${likesUsuario[post.id] ? 'text-[#4EDCD8]' : 'hover:text-[#4EDCD8]'}`}>
+                  <FontAwesomeIcon icon={faThumbsUp} /> Me gusta {post.totalLikes > 0 && <span>({post.totalLikes})</span>}
                 </button>
-
-                <button
-                  className="flex items-center gap-2 hover:text-blue-500"
-                  onClick={() =>
-                    setComentariosAbiertos(
-                      post.id === comentariosAbiertos ? null : post.id
-                    )
-                  }
-                >
-                  💬 Comentar
+                <button onClick={() => setComentariosAbiertos(post.id === comentariosAbiertos ? null : post.id)} className="flex items-center gap-1 hover:text-[#4EDCD8]">
+                  <FontAwesomeIcon icon={faComment} /> Comentar
                 </button>
-
-                <button className="flex items-center gap-2 hover:text-blue-500">
-                  🔁 Compartir
+                <button onClick={() => compartirPost(post)} className="flex items-center gap-1 hover:text-[#4EDCD8]">
+                  <FontAwesomeIcon icon={faShare} /> Compartir
                 </button>
               </div>
-               {/* Comentarios */}
+
               {comentariosAbiertos === post.id && <Comentario postId={post.id} />}
             </div>
           </div>

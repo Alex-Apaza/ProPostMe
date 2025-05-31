@@ -1,51 +1,114 @@
 .perfil-container {
-  position: relative;
   margin-top: 60px;
+  font-family: "Segoe UI", sans-serif;
+  color: #111;
 }
 
+/* Portada */
 .portada {
   width: 100%;
-  height: 200px;
+  height: 180px;
   position: relative;
-  background: #ccc;
+  background-color: #ddd;
+  overflow: hidden;
 }
 
-.foto-perfil-container {
-  position: absolute;
-  top: 140px;
-  left: 20px;
-  border: 4px solid white;
-  border-radius: 50%;
-  overflow: hidden;
-  z-index: 10;
+.portada img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Cabecera */
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #000;
+  padding: 5px 10px;
+  margin-top: -5px;
+  position: relative;
+  z-index: 5;
+  border-bottom: 1px solid #4edcd8;
+  border-radius: 0 0 12px 12px;
+  flex-wrap: wrap;
 }
 
 .foto-perfil {
   border-radius: 50%;
-}
-
-.perfil-info {
-  margin-left: 160px;
+  border: 4px solid white;
+  background-color: white;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
   margin-top: 40px;
-  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.perfil-info h2 {
-  font-size: 1.8rem;
+.info-nombre {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  margin-top: 40px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.info-nombre h2 {
+  font-size: 1.5rem;
   font-weight: bold;
 }
 
-.perfil-detalles {
+.info-nombre p {
+  font-size: 0.95rem;
+  color: #cccccc;
+}
+
+/* Botón editar */
+.btn-editar-perfil {
   margin-top: 15px;
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 8px;
+  background-color: #4edcd8;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+  width: fit-content;
+}
+
+.btn-editar-perfil:hover {
+  background-color: #38c3c3;
+}
+
+/* Detalles */
+.perfil-detalles {
+  margin-top: 10px;
+  margin-left: 30px;
+  margin-right: 30px;
+  max-width: 600px;
+  padding: 16px 20px;
+  border-top: 4px solid #1db8bb;
+  background: #f9f9f9;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  border-radius: 10px;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #424040;
 }
 
 .perfil-posts {
-  margin-top: 30px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 0 20px;
 }
+
+/* Editor flotante */
 .editor-flotante-overlay {
   position: fixed;
   top: 0;
@@ -56,15 +119,46 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 50;
+  z-index: 100;
 }
 
 .editor-flotante {
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   padding: 20px;
-  position: relative;
-  max-width: 500px;
   width: 90%;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  max-width: 500px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+/* 📱 Diseño responsivo */
+@media screen and (max-width: 600px) {
+  .perfil-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .foto-perfil {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+  }
+
+  .info-nombre {
+    margin-top: 10px;
+    align-items: center;
+  }
+
+  .perfil-detalles {
+    margin: 20px 10px;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .btn-editar-perfil {
+    width: 100%;
+  }
 }

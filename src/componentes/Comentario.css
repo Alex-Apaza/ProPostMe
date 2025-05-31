@@ -1,0 +1,64 @@
+.comentario {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.comentario-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid #4EDCD8;
+}
+
+.comentario-info {
+  flex: 1;
+}
+
+.comentario-autor {
+  font-weight: bold;
+  color: #111;
+  margin-bottom: 2px;
+}
+
+.comentario-texto {
+  font-size: 14px;
+  color: #444;
+}
+
+.input-comentario {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.input-comentario input {
+  flex-grow: 1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #4EDCD8;
+  background-color: #fff;
+  color: #000;
+  font-size: 14px;
+}
+
+.input-comentario input::placeholder {
+  color: #999;
+}
+
+.input-comentario button {
+  background: none;
+  color: #4EDCD8;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.input-comentario button:hover {
+  background-color: rgba(78, 220, 216, 0.1);
+}
