@@ -1,11 +1,31 @@
+'use client'
+import Headerp from '@/componentes/Headerp'
+import MenuAdmin from '@/componentes/MenuAdmin'
+import TarjetasAdmin from '@/componentes/TarjetasAdmin'
+import TarjetasMarket from '@/componentes/TarjetasMarket'
+import { useState } from 'react'
 import React from 'react'
 
-const page = () => {
+export default function Page() {
+  const [filtros, setFiltros] = useState({
+    categoria: 'Todos',
+    precioMax: Infinity,
+  })
   return (
-    <div>
-      Hola ADMIN
-    </div>
+    <>
+      <Headerp />
+      <div className="flex">
+        <MenuAdmin setFiltros={setFiltros} />
+        <div className="flex-1 p-6">
+          <h2 className="text-xl font-semibold">Hola Administrador</h2>
+          <p className="text-gray-600 mb-4">
+            Contribuye al bienestar de la comunidad promoviendo una experiencia segura, respetuosa y saludable para todos.
+          </p>
+          <TarjetasAdmin filtros={filtros} />
+        </div>
+      </div>
+    </>
   )
 }
 
-export default page
+

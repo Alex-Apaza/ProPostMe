@@ -1,0 +1,492 @@
+:root {
+  --variable-collection-accent: rgba(255, 64, 129, 1);
+  --variable-collection-bg: rgba(245, 245, 245, 1);
+  --variable-collection-bg-dark: rgba(40, 44, 52, 1);
+  --variable-collection-bg2: rgba(40, 44, 52, 1);
+  --variable-collection-gra2: rgba(222, 235, 238, 1);
+  --variable-collection-gray: rgba(58, 63, 74, 1);
+  --variable-collection-gray2: rgba(109, 121, 146, 1);
+  --variable-collection-primary: rgba(0, 121, 151, 1);
+}
+.dashboard {
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.dashboard .div-20 {
+  background-color: #f5f5f5;
+  height: 2145px;
+  position: relative;
+  width: 1440px;
+}
+
+.dashboard .overlap-2 {
+  background-color: #f5f5f5;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: #007997;
+  border-top-style: solid;
+  border-top-width: 1px;
+  height: 891px;
+  left: 354px;
+  position: absolute;
+  top: 523px;
+  width: 1022px;
+}
+
+.dashboard .frame-22 {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  left: -1px;
+  padding: 0px 8px;
+  position: absolute;
+  top: 20px;
+  width: 1022px;
+}
+
+.dashboard .events-wrapper {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 10px;
+  justify-content: center;
+  position: relative;
+}
+
+.dashboard .events {
+  color: #282c34;
+  font-family: "Quicksand-Bold", Helvetica;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2.40px;
+  line-height: normal;
+  margin-top: -1.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .frame-23 {
+  align-items: flex-start;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 40px;
+  position: relative;
+}
+
+.dashboard .frame-24 {
+  align-items: flex-start;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 16px;
+  position: relative;
+}
+
+.dashboard .frame-25 {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 16px;
+  justify-content: center;
+  position: relative;
+}
+
+.dashboard .text-wrapper-24 {
+  color: #282c34;
+  font-family: "Quicksand-Bold", Helvetica;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.60px;
+  line-height: normal;
+  margin-top: -1.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .text-wrapper-25 {
+  color: #007997;
+  font-family: "Quicksand-Bold", Helvetica;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.40px;
+  line-height: normal;
+  margin-top: -1.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .icon-color-2 {
+  height: 10.23px;
+  position: relative;
+  width: 16px;
+}
+
+.dashboard .rectangle-6 {
+  background-color: #f5f5f5;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: #007997;
+  border-top-style: solid;
+  border-top-width: 1px;
+  height: 224px;
+  left: 354px;
+  position: absolute;
+  top: 1881px;
+  width: 1022px;
+}
+
+.dashboard .rectangle-7 {
+  background-color: #007997;
+  height: 32px;
+  left: 0;
+  position: absolute;
+  top: 2113px;
+  width: 1440px;
+}
+
+.dashboard .frame-26 {
+  align-items: flex-start;
+  display: inline-flex;
+  gap: 32px;
+  left: 354px;
+  position: absolute;
+  top: 1438px;
+}
+
+.dashboard .your-top-courses-wrapper {
+  align-items: center;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: #282c34;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 48px;
+  justify-content: center;
+  position: relative;
+}
+
+.dashboard .your-top-courses {
+  color: #282c34;
+  font-family: "Quicksand-Bold", Helvetica;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2.40px;
+  line-height: normal;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .most-viewed-wrapper {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 10px;
+  height: 48px;
+  justify-content: center;
+  padding: 10px;
+  position: relative;
+}
+
+.dashboard .most-viewed {
+  color: #282c34;
+  font-family: "Quicksand-Regular", Helvetica;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 2.40px;
+  line-height: normal;
+  margin-top: -2.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .frame-27 {
+  align-items: center;
+  background-color: var(--variable-collection-gra2);
+  border-radius: 20px;
+  display: flex;
+  gap: 74px;
+  left: 686px;
+  padding: 10px 24px;
+  position: absolute;
+  top: 40px;
+  width: 359px;
+}
+
+.dashboard .vector-8 {
+  height: 20px;
+  position: relative;
+  width: 20px;
+}
+
+.dashboard .search-and-find {
+  color: #282c3480;
+  font-family: "Quicksand-Regular", Helvetica;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 1.60px;
+  line-height: normal;
+  margin-top: -1.00px;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .frame-28 {
+  align-items: center;
+  display: inline-flex;
+  gap: 24px;
+  left: 1143px;
+  position: absolute;
+  top: 40px;
+}
+
+.dashboard .frame-29 {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 24px;
+  position: relative;
+}
+
+.dashboard .frame-30 {
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.dashboard .frame-31 {
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 16px;
+  justify-content: center;
+  position: relative;
+}
+
+.dashboard .ellipse-5 {
+  height: 40px;
+  position: relative;
+  width: 40px;
+}
+
+.dashboard .frame-32 {
+  align-items: center;
+  align-self: stretch;
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.dashboard .input {
+  background: transparent;
+  border: none;
+  color: #282c34;
+  font-family: "Quicksand-Bold", Helvetica;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.40px;
+  line-height: normal;
+  padding: 0;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .admin-2 {
+  color: #282c34;
+  font-family: "Quicksand-Regular", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1.40px;
+  line-height: normal;
+  position: relative;
+  width: fit-content;
+}
+
+.dashboard .frame-33 {
+  align-items: center;
+  display: inline-flex;
+  gap: 24px;
+  left: 354px;
+  position: absolute;
+  top: 44px;
+}
+
+.dashboard .frame-34 {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  position: relative;
+}
+
+.dashboard .group-wrapper {
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+  width: 32px;
+}
+
+.dashboard .overlap-group-wrapper {
+  height: 31px;
+  left: 4px;
+  position: relative;
+  top: 1px;
+  width: 28px;
+}
+
+.dashboard .overlap-group-2 {
+  height: 31px;
+  position: relative;
+}
+
+.dashboard .vector-9 {
+  height: 24px;
+  left: 0;
+  position: absolute;
+  top: 4px;
+  width: 24px;
+}
+
+.dashboard .vector-10 {
+  height: 24px;
+  left: 0;
+  position: absolute;
+  top: 3px;
+  width: 24px;
+}
+
+.dashboard .vector-11 {
+  height: 8px;
+  left: 0;
+  position: absolute;
+  top: 3px;
+  width: 24px;
+}
+
+.dashboard .vector-12 {
+  height: 4px;
+  left: 2px;
+  position: absolute;
+  top: 4px;
+  width: 4px;
+}
+
+.dashboard .vector-13 {
+  height: 4px;
+  left: 18px;
+  position: absolute;
+  top: 4px;
+  width: 4px;
+}
+
+.dashboard .group-2 {
+  height: 11px;
+  left: 3px;
+  position: absolute;
+  top: 13px;
+  width: 19px;
+}
+
+.dashboard .vector-14 {
+  height: 13px;
+  left: 14px;
+  position: absolute;
+  top: 17px;
+  width: 13px;
+}
+
+.dashboard .vector-15 {
+  height: 7px;
+  left: 13px;
+  position: absolute;
+  top: 17px;
+  width: 15px;
+}
+
+.dashboard .vector-16 {
+  height: 1px;
+  left: 21px;
+  position: absolute;
+  top: 23px;
+  width: 5px;
+}
+
+.dashboard .vector-17 {
+  height: 4px;
+  left: 20px;
+  position: absolute;
+  top: 19px;
+  width: 1px;
+}
+
+.dashboard .vector-18 {
+  height: 3px;
+  left: 17px;
+  position: absolute;
+  top: 24px;
+  width: 3px;
+}
+
+.dashboard .vector-19 {
+  height: 3px;
+  left: 19px;
+  position: absolute;
+  top: 22px;
+  width: 2px;
+}
+
+.dashboard .vector-20 {
+  height: 15px;
+  left: 13px;
+  position: absolute;
+  top: 16px;
+  width: 15px;
+}
+
+.dashboard .vector-21 {
+  height: 1px;
+  left: 20px;
+  position: absolute;
+  top: 23px;
+  width: 1px;
+}
+
+.dashboard .vector-22 {
+  height: 1px;
+  left: 22px;
+  position: absolute;
+  top: 23px;
+  width: 1px;
+}
+
+.dashboard .vector-23 {
+  height: 7px;
+  left: 3px;
+  position: absolute;
+  top: 0;
+  width: 19px;
+}
+
+.dashboard .vector-24 {
+  height: 4px;
+  left: 3px;
+  position: absolute;
+  top: 0;
+  width: 19px;
+}
+
+.dashboard .text-wrapper-26 {
+  color: #282c34;
+  font-family: "Quicksand-Medium", Helvetica;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 1.60px;
+  line-height: normal;
+  position: relative;
+  width: fit-content;
+}
