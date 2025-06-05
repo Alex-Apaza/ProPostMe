@@ -118,13 +118,13 @@ const Headerp = () => {
           </button>
 
           {mostrarMenuPerfil && (
-            <div className="absolute right-0 top-full mt-2 w-40 bg-white border rounded shadow z-50 text-sm">
+            <div className="absolute right-0 top-full mt-2 w-40 bg-black border rounded shadow z-50 text-sm">
               <button
                 onClick={() => {
                   setMostrarMenuPerfil(false);
                   router.push("/Perfil");
                 }}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-cyan-500"
               >
                 Ver perfil
               </button>

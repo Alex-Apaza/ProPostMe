@@ -1,0 +1,104 @@
+.editor-perfil-container {
+  max-width: 360px;
+  margin: 16px auto;
+  padding: 16px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.editor-perfil-container h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+  color: #111;
+}
+
+.editor-perfil-container label {
+  font-weight: 500;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  display: block;
+}
+
+.editor-perfil-container input,
+.editor-perfil-container textarea {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+
+.editor-perfil-container input:focus,
+.editor-perfil-container textarea:focus {
+  border-color: #4EDCD8;
+  outline: none;
+}
+
+.editor-perfil-container textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.img-preview {
+  border-radius: 6px;
+  margin-top: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.img-preview.perfil {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.img-preview.portada {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+}
+
+.editor-perfil-container button {
+  margin-top: 14px;
+  width: 100%;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editor-perfil-container .guardar {
+  background-color: #4EDCD8;
+  color: #000;
+  border: none;
+}
+
+.editor-perfil-container .guardar:hover {
+  background-color: #3bc3c3;
+}
+
+.editor-perfil-container .cancelar {
+  background-color: #f3f3f3;
+  color: #333;
+  border: none;
+}
+
+.editor-perfil-container .cancelar:hover {
+  background-color: #e0e0e0;
+}
+
+.editor-perfil-container .mensaje {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #198754;
+  text-align: center;
+}
