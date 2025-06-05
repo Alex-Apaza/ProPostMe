@@ -187,7 +187,7 @@ const Cardpost = () => {
                 onClick={() => setMenuAbierto(menuAbierto === post.id ? null : post.id)}
               >...</button>
               {menuAbierto === post.id && (
-                <div className="absolute bg-white border shadow-md right-4 mt-10 rounded-md z-50 text-sm">
+                <div className="absolute bg-black border shadow-md right-4 mt-10 rounded-md z-50 text-sm">
                   <ul className="py-2 px-3 space-y-2">
                     <li className="cursor-pointer hover:text-red-500" onClick={() => reportarPublicacion(post.id, post.usuarioId)}>
                       <FontAwesomeIcon icon={faFlag} /> Reportar publicación

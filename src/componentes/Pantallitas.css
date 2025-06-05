@@ -1,0 +1,57 @@
+.pantallita-container {
+  width: 300px;
+  background: #ffffff00;
+  border: #3bc3c3 2px solid;
+  border-radius: 16px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  margin: 20px auto;
+  text-align: center;
+  animation: fadein 0.6s ease-in-out;
+  transition: transform 0.4s ease;
+}
+
+.pantallita-titulo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.pantallita-img {
+  border-radius: 12px;
+  margin: 10px auto;
+  object-fit: cover;
+}
+
+.pantallita-desc {
+  font-size: 0.95rem;
+  color: #7b7a7a;
+  margin-bottom: 14px;
+}
+
+.pantallita-btn {
+  background: #4EDCD8;
+  color: #000;
+  font-weight: 600;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.pantallita-btn:hover {
+  background: #3bc3c3;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
