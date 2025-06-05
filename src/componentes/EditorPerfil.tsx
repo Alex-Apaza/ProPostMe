@@ -83,12 +83,19 @@ const EditorPerfil = ({ onClose }: Props) => {
       descripcion,
       carrera,
     };
-
     if (fotoPerfil !== undefined && fotoPerfil !== "") {
       datosActualizados.fotoPerfil = fotoPerfil;
     }
 
     if (fotoPortada !== undefined && fotoPortada !== "") {
+      datosActualizados.fotoPortada = fotoPortada;
+    }
+
+    if (previewPerfil) {
+      datosActualizados.fotoPerfil = fotoPerfil;
+    }
+
+    if (previewPortada) {
       datosActualizados.fotoPortada = fotoPortada;
     }
 
@@ -100,6 +107,7 @@ const EditorPerfil = ({ onClose }: Props) => {
 
     setMensaje("✅ Perfil actualizado correctamente");
     setCargando(false);
+    window.location.reload();
   };
 
   return (
