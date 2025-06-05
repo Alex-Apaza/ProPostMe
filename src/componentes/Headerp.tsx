@@ -63,15 +63,8 @@ const Headerp = () => {
           />
         </Link>
 
-        {/* 🔍 Búsqueda (expandida en PC, contraída en móvil) */}
-        <div className="search-bar hidden sm:flex items-center ml-4">
-          <Image src="/Lupa.png" width={20} height={20} alt="Buscar" />
-          <input
-            type="text"
-            placeholder="Busca tus intereses..."
-            className="ml-2 px-2 py-1 border rounded-lg w-64 text-sm"
-          />
-        </div>
+       
+        
 
         {/* 🔍 Icono solo en móvil */}
         <button className="search-button sm:hidden ml-2">
