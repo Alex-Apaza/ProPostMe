@@ -1,8 +1,34 @@
 .feed-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 30px;
   padding: 24px 12px;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.pantallitas-col {
+  flex: 1;
+  position: sticky;
+  top: 100px;
+  max-width: 300px;
+}
+
+.posteos-col {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 600px;
+}
+@media (max-width: 768px) {
+  .pantallitas-col {
+    display: none;
+  }
+
+  .feed-container {
+    justify-content: center;
+  }
 }
