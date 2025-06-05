@@ -11,6 +11,7 @@ interface Props {
   filtros: {
     categoria: string;
     precioMax: number;
+    busqueda: string;
   };
 }
 
@@ -65,12 +66,17 @@ const TarjetasMarket: React.FC<Props> = ({ filtros }) => {
     obtenerDatos();
   }, []);
 
-  const productosFiltrados = productos.filter((p) => {
-    const coincideCategoria =
-      filtros.categoria === "Todos" || p.categoria === filtros.categoria;
-    const coincidePrecio = p.precio <= filtros.precioMax;
-    return coincideCategoria && coincidePrecio;
-  });
+ const productosFiltrados = productos.filter((p) => {
+  const coincideCategoria =
+    filtros.categoria === "Todos" || p.categoria === filtros.categoria;
+
+  const coincidePrecio = p.precio <= filtros.precioMax;
+
+  const coincideBusqueda = p.titulo.toLowerCase().includes(filtros.busqueda);
+
+  return coincideCategoria && coincidePrecio && coincideBusqueda;
+});
+
 
   return (
     <div className="grid-tarjetas">
