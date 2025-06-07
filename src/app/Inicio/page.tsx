@@ -79,28 +79,43 @@ const Page = () => {
             <div className="tooltip">
               <a href="#">Equipo</a>
               <span className="tooltiptext">
-                Conoce a quienes están detrás de PostMe.
+                Conoce al grupo de aficionados que estan detrás de esta
+                plataforma pensada por y para ti.
+                <li>Alex Apaza Nina</li>
+                <li>Sebastian Sumi Bolivar</li>
+                <li>Rodrigo Aguilar Sandoval</li>
               </span>
             </div>
             <div className="tooltip">
               <a href="#">Sobre Nosotros</a>
-              <span className="tooltiptext">Nuestra misión y visión.</span>
+              <span className="tooltiptext">
+                PostMe es una plataforma creada por y para estudiantes
+                universitarios. Desarrollada por el grupo Suicideboys, nuestro
+                objetivo es facilitar la conexión, el intercambio de ideas y la
+                compraventa segura entre alumnos. Creemos en el poder de la
+                comunidad estudiantil y trabajamos para potenciarla cada día.
+              </span>
             </div>
             <div className="tooltip">
-              <a href="#">Testimonios</a>
+              <a href="#">Terminos y Condiciones</a>
               <span className="tooltiptext">
-                Lo que opinan nuestros usuarios.
+                Al usar este servicio, aceptas nuestras reglas. No permitimos
+                usos indebidos, contenido ofensivo ni actividades ilegales.
+                Podemos cambiar estos términos cuando sea necesario.
               </span>
             </div>
             <div className="tooltip">
               <a href="#">Contacto</a>
               <span className="tooltiptext">
                 Escríbenos o llámanos para más información.
+                <li>76227643</li>
+                <li>71996745</li>
+                <li>72871395</li>
               </span>
             </div>
           </nav>
           <div className="footer-icons">
-            <a href="">
+            <a href="https://www.facebook.com/sebastian.bolivar.56614/about">
               <img src="/Logofacebook.png" alt="Facebook" />
             </a>
             <a href="https://wa.link/ai9e07">

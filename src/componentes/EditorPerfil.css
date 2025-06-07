@@ -102,3 +102,19 @@
   color: #198754;
   text-align: center;
 }
+.editor-perfil-grid {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.columna {
+  flex: 1;
+  min-width: 300px;
+}
+@media (max-width: 768px) {
+  .editor-perfil-grid {
+    flex-direction: column;
+  }
+}
