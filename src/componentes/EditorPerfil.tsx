@@ -114,91 +114,103 @@ const EditorPerfil = ({ onClose }: Props) => {
     <div className="editor-perfil-container">
       <h2>Editar Perfil</h2>
 
-      <label>Nombre:</label>
-      <input
-        type="text"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        placeholder="Tu nombre"
-      />
+      <div className="editor-perfil-grid">
+        {/* Columna izquierda */}
+        <div className="columna">
+          <label>Nombre:</label>
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="Tu nombre"
+          />
 
-      <label>Apellido:</label>
-      <input
-        type="text"
-        value={apellido}
-        onChange={(e) => setApellido(e.target.value)}
-        placeholder="Tu apellido"
-      />
+          <label>Apellido:</label>
+          <input
+            type="text"
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+            placeholder="Tu apellido"
+          />
 
-      <label>Carrera:</label>
-      <input
-        type="text"
-        value={carrera}
-        onChange={(e) => setCarrera(e.target.value)}
-        placeholder="Carrera"
-      />
+          <label>Carrera:</label>
+          <input
+            type="text"
+            value={carrera}
+            onChange={(e) => setCarrera(e.target.value)}
+            placeholder="Carrera"
+          />
 
-      <label>Acerca de ti:</label>
-      <textarea
-        value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
-        placeholder="Descripción personal"
-        rows={3}
-      />
+          <label>Acerca de ti:</label>
+          <textarea
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+            placeholder="Descripción personal"
+            rows={3}
+          />
+        </div>
 
-      <label>Nueva contraseña:</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="••••••••"
-      />
+        {/* Columna derecha */}
+        <div className="columna">
+          <label>Nueva contraseña:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+          />
 
-      <label>Confirmar contraseña:</label>
-      <input
-        type="password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        placeholder="••••••••"
-      />
+          <label>Confirmar contraseña:</label>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="••••••••"
+          />
 
-      <label>Foto de Perfil:</label>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={async (e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            setPreviewPerfil(URL.createObjectURL(file));
-            const url = await subirACloudinary(file);
-            setFotoPerfil(url);
-          }
-        }}
-      />
-      {previewPerfil && (
-        <img src={previewPerfil} alt="Preview" className="img-preview perfil" />
-      )}
+          <label>Foto de Perfil:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setPreviewPerfil(URL.createObjectURL(file));
+                const url = await subirACloudinary(file);
+                setFotoPerfil(url);
+              }
+            }}
+          />
+          {previewPerfil && (
+            <img
+              src={previewPerfil}
+              alt="Preview"
+              className="img-preview perfil"
+            />
+          )}
 
-      <label>Foto de Portada:</label>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={async (e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            setPreviewPortada(URL.createObjectURL(file));
-            const url = await subirACloudinary(file);
-            setFotoPortada(url);
-          }
-        }}
-      />
-      {previewPortada && (
-        <img
-          src={previewPortada}
-          alt="Portada Preview"
-          className="img-preview portada"
-        />
-      )}
+          <label>Foto de Portada:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setPreviewPortada(URL.createObjectURL(file));
+                const url = await subirACloudinary(file);
+                setFotoPortada(url);
+              }
+            }}
+          />
+          {previewPortada && (
+            <img
+              src={previewPortada}
+              alt="Portada Preview"
+              className="img-preview portada"
+            />
+          )}
+        </div>
+      </div>
 
       <button onClick={manejarEnvio} disabled={cargando} className="guardar">
         {cargando ? "Guardando..." : "Guardar Cambios"}
