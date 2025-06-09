@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
+import { getAuth, signOut } from "firebase/auth";
+
 import {
   collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc
 } from "firebase/firestore";
@@ -55,7 +57,6 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
   };
 
   const crearUsuario = async () => {
-    // Validar campos mínimos
     if (!nuevoUsuario.nombre || !nuevoUsuario.correo_institucional || !nuevoUsuario.contraseña) {
       alert("Por favor completa los campos: nombre, correo institucional y contraseña");
       return;
@@ -124,11 +125,11 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
       <div>
         <h3>Gestión de Usuarios</h3>
         <table className="w-full border">
-          
           <thead style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }}>
-<tr>
-            <th>Nombre</th><th>Apellido</th><th>Correo</th><th>Carrera</th><th>Bloqueado</th><th>Eliminar</th>
-          </tr></thead>
+            <tr>
+              <th>Nombre</th><th>Apellido</th><th>Correo</th><th>Carrera</th><th>Bloqueado</th><th>Eliminar</th>
+            </tr>
+          </thead>
           <tbody>
             {usuarios.map(u => (
               <tr key={u.id} className="border-t">
@@ -156,7 +157,6 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
           "carrera",
           "contraseña",
           "correo_institucional",
-          
           "universidadId"
         ].map(campo => (
           <Input
@@ -178,8 +178,9 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
         <table className="w-full border">
           <thead style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }}>
             <tr>
-            <th>Motivo</th><th>PostId</th><th>Contenido</th><th>Acciones</th>
-          </tr></thead>
+              <th>Motivo</th><th>PostId</th><th>Contenido</th><th>Acciones</th>
+            </tr>
+          </thead>
           <tbody>
             {reportes.map(r => (
               <tr key={r.id} className="border-t">
@@ -199,6 +200,25 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
       </div>
     );
   }
+
+  if (filtros.categoria === "Cerrar Sesión") {
+  const cerrarSesion = () => {
+    localStorage.removeItem('usuarioId');
+    window.location.href = '/loginsesion';
+  };
+
+  return (
+    <div className="p-6 text-center text-lg font-semibold">
+      ¿Estás seguro de que deseas cerrar sesión?
+      <div className="mt-4">
+        <Button  style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }} variant="destructive" onClick={cerrarSesion}>
+          Cerrar Sesión
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 
   return null;
 }
