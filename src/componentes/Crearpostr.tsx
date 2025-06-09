@@ -3,16 +3,26 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  collection, query, orderBy, onSnapshot, getDoc, doc,
-  addDoc, deleteDoc, setDoc, getCountFromServer, getDocs
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  getDoc,
+  doc,
+  addDoc,
+  deleteDoc,
+  setDoc,
+  getCountFromServer,
+  where,
+  getDocs,
+  limit,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Comentario from '@/componentes/Comentario';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faShare, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
+import { faThumbsUp, faComment, faShare, faFlag, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface Post {
   id: string;
@@ -42,31 +52,42 @@ const Cardrep = () => {
   const usuarioActual = typeof window !== 'undefined' ? localStorage.getItem('usuarioId') : null;
 
   useEffect(() => {
-    const obtenerPosts = async () => {
-      // Obtener IDs válidos desde reportes_publicacion
-      const reportesSnap = await getDocs(collection(db, 'reportes_publicacion'));
-      const postIdsPermitidos = new Set<string>();
-      reportesSnap.forEach(doc => {
-        const data = doc.data();
-        if (data.postId) {
-          postIdsPermitidos.add(data.postId);
-        }
-      });
+    const cargarPostsFiltrados = async () => {
+      // 1. Obtener todos los postId de reportes_publicaciones
+      const reportesSnapshot = await getDocs(collection(db, 'reportes_publicaciones'));
+      const postIdsReportados = reportesSnapshot.docs.map(doc => doc.data().postId).filter(Boolean);
 
-      const q = query(collection(db, 'posts'), orderBy('fecha', 'desc'));
-      const unsubscribe = onSnapshot(q, async (snapshot) => {
-        const tempPosts: Post[] = [];
-        const tempUsuarios: Record<string, Usuario> = { ...usuarios };
-        const tempLikes: Record<string, boolean> = {};
+      if (postIdsReportados.length === 0) {
+        setPosts([]);
+        return;
+      }
 
-        for (const docSnap of snapshot.docs) {
-          const postId = docSnap.id;
-          if (!postIdsPermitidos.has(postId)) continue; // filtrar por IDs permitidos
+      // Firestore permite máximo 10 elementos en 'in', por eso dividimos en batches si es necesario
+      const batches: string[][] = [];
+      for (let i = 0; i < postIdsReportados.length; i += 10) {
+        batches.push(postIdsReportados.slice(i, i + 10));
+      }
 
+      const tempPosts: Post[] = [];
+      const tempUsuarios: Record<string, Usuario> = {};
+      const tempLikes: Record<string, boolean> = {};
+
+      for (const batch of batches) {
+        const postsQuery = query(
+          collection(db, 'posts'),
+          where('__name__', 'in', batch),
+          orderBy('fecha', 'desc')
+        );
+
+        const postsSnapshot = await getDocs(postsQuery);
+
+        for (const docSnap of postsSnapshot.docs) {
           const post = docSnap.data();
           const fecha = post.fecha?.toDate() || new Date();
+          const postId = docSnap.id;
           const likesSnapshot = await getCountFromServer(collection(db, 'posts', postId, 'likes'));
 
+          // Verificar si el usuario actual le dio like
           if (usuarioActual) {
             const likeRef = doc(db, 'posts', postId, 'likes', usuarioActual);
             const likeSnap = await getDoc(likeRef);
@@ -84,6 +105,7 @@ const Cardrep = () => {
             incognito: post.incognito || false,
           });
 
+          // Cargar usuario si no está cargado
           if (post.usuarioId && !tempUsuarios[post.usuarioId]) {
             const userSnap = await getDoc(doc(db, 'usuarios', post.usuarioId));
             if (userSnap.exists()) {
@@ -96,17 +118,16 @@ const Cardrep = () => {
             }
           }
         }
+      }
 
-        setPosts(tempPosts);
-        setUsuarios(tempUsuarios);
-        setLikesUsuario(tempLikes);
-      });
-
-      return () => unsubscribe();
+      setPosts(tempPosts);
+      setUsuarios(tempUsuarios);
+      setLikesUsuario(tempLikes);
     };
 
-    obtenerPosts();
-  }, []);
+    cargarPostsFiltrados();
+
+  }, [usuarioActual]);
 
   useEffect(() => {
     const ocultos = JSON.parse(localStorage.getItem('postsOcultos') || '[]');
@@ -151,6 +172,18 @@ const Cardrep = () => {
     setOcultosActuales(nuevos);
   };
 
+  const reportarPublicacion = async (postId: string, usuarioReportado: string) => {
+    if (!usuarioActual) return;
+    await addDoc(collection(db, 'reportes_publicaciones'), {
+      postId,
+      usuarioReportado,
+      usuarioQueReporta: usuarioActual,
+      motivo: 'Contenido inapropiado',
+      fecha: new Date(),
+    });
+    alert('Publicación reportada.');
+  };
+
   const irAlPerfil = (usuarioId: string) => {
     if (!usuarioActual) return;
     if (usuarioId === usuarioActual) router.push('/Perfil');
@@ -193,6 +226,9 @@ const Cardrep = () => {
               {menuAbierto === post.id && (
                 <div className="absolute bg-black border shadow-md right-4 mt-10 rounded-md z-50 text-sm">
                   <ul className="py-2 px-3 space-y-2">
+                    <li className="cursor-pointer hover:text-red-500" onClick={() => reportarPublicacion(post.id, post.usuarioId)}>
+                      <FontAwesomeIcon icon={faFlag} /> Reportar publicación
+                    </li>
                     <li className="cursor-pointer hover:text-red-500" onClick={() => alert('Pendiente: bloqueo')}>
                       🚫 Bloquear usuario
                     </li>

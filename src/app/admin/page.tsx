@@ -22,7 +22,7 @@ export default function Page() {
           <p className="text-gray-600 mb-4">
             Contribuye al bienestar de la comunidad promoviendo una experiencia segura, respetuosa y saludable para todos.
           </p>
-          <Cardrep/>
+          
           <TarjetasAdmin filtros={filtros} />
         </div>
       </div>

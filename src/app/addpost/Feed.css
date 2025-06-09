@@ -32,3 +32,37 @@
     justify-content: center;
   }
 }
+
+/* Contenedor para el botón atrás, alineado a la derecha */
+.back-button-container {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end; /* alinea el contenido a la derecha */
+  align-items: center;
+  margin-bottom: 10px; /* espacio abajo si quieres */
+}
+
+/* Estilo del botón */
+.back-button {
+  background-color: linear-gradient(to right, #4EDCD8, #30A3A3); /* blanco con transparencia */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #30a3a3;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #30a3a3;
+  color: white;
+}
+
+/* Posteos columna sin cambiar nada */
+.posteos-col {
+  flex: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
