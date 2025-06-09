@@ -5,7 +5,7 @@ import Link from 'next/link'
 import './Menumarket.css'
 import { Dispatch, SetStateAction } from 'react'
 
-const categoria = ['Dashboard', 'Usuarios', 'Reportes',]
+const categoria = ['Dashboard', 'Usuarios', 'Reportes', 'Crear Usuario']
 
 type Props = {
   setFiltros: Dispatch<SetStateAction<{ categoria: string; precioMax: number }>>
@@ -20,7 +20,7 @@ const MenuAdmin : React.FC<Props> = ({ setFiltros }) => {
 
   return (
     <aside className="menu-unimarket">
-      <Link href="/Feed" className="btn-vender">
+      <Link href="/addpost" className="btn-vender">
         Realizar una Publicacion
       </Link>
 
@@ -35,14 +35,7 @@ const MenuAdmin : React.FC<Props> = ({ setFiltros }) => {
         ))}
       </ul>
 
-      <h3 className="menu-title mt-4">Buscar Usario</h3>
-      <label>Nombre:</label>
-      <input
-        type="number"
-        placeholder="name"
-        className="input-precio"
-        min={0}
-      />
+      
     </aside>
   )
 }

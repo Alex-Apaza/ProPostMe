@@ -94,3 +94,11 @@
     font-size: 0.95rem;
   }
 }
+.formregister-label {
+  text-align:left;
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+}

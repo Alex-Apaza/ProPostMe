@@ -4,15 +4,16 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   collection, query, orderBy, onSnapshot, getDoc, doc,
-  addDoc, deleteDoc, setDoc, getCountFromServer
+  addDoc, deleteDoc, setDoc, getCountFromServer, getDocs
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Comentario from '@/componentes/Comentario';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faShare, faFlag, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faComment, faShare, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+
 interface Post {
   id: string;
   contenido: string;
@@ -30,7 +31,7 @@ interface Usuario {
   fotoPerfil?: string;
 }
 
-const Cardpost = () => {
+const Cardrep = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [usuarios, setUsuarios] = useState<Record<string, Usuario>>({});
   const [menuAbierto, setMenuAbierto] = useState<string | null>(null);
@@ -41,55 +42,70 @@ const Cardpost = () => {
   const usuarioActual = typeof window !== 'undefined' ? localStorage.getItem('usuarioId') : null;
 
   useEffect(() => {
-    const q = query(collection(db, 'posts'), orderBy('fecha', 'desc'));
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const tempPosts: Post[] = [];
-      const tempUsuarios: Record<string, Usuario> = { ...usuarios };
-      const tempLikes: Record<string, boolean> = {};
-
-      for (const docSnap of snapshot.docs) {
-        const post = docSnap.data();
-        const fecha = post.fecha?.toDate() || new Date();
-        const postId = docSnap.id;
-        const likesSnapshot = await getCountFromServer(collection(db, 'posts', postId, 'likes'));
-
-        // ¿Ya le dio like?
-        if (usuarioActual) {
-          const likeRef = doc(db, 'posts', postId, 'likes', usuarioActual);
-          const likeSnap = await getDoc(likeRef);
-          tempLikes[postId] = likeSnap.exists();
+    const obtenerPosts = async () => {
+      // Obtener IDs válidos desde reportes_publicacion
+      const reportesSnap = await getDocs(collection(db, 'reportes_publicacion'));
+      const postIdsPermitidos = new Set<string>();
+      reportesSnap.forEach(doc => {
+        const data = doc.data();
+        if (data.postId) {
+          postIdsPermitidos.add(data.postId);
         }
+      });
 
-        tempPosts.push({
-          id: postId,
-          contenido: post.contenido,
-          mediaUrl: post.mediaUrl,
-          mediaTipo: post.mediaTipo,
-          fecha,
-          usuarioId: post.usuarioId || 'desconocido',
-          totalLikes: likesSnapshot.data().count || 0,
-          incognito: post.incognito || false,
-        });
+      const q = query(collection(db, 'posts'), orderBy('fecha', 'desc'));
+      const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const tempPosts: Post[] = [];
+        const tempUsuarios: Record<string, Usuario> = { ...usuarios };
+        const tempLikes: Record<string, boolean> = {};
 
-        if (post.usuarioId && !tempUsuarios[post.usuarioId]) {
-          const userSnap = await getDoc(doc(db, 'usuarios', post.usuarioId));
-          if (userSnap.exists()) {
-            const data = userSnap.data();
-            tempUsuarios[post.usuarioId] = {
-              nombre: data.nombre,
-              apellido: data.apellido,
-              fotoPerfil: data.fotoPerfil || '',
-            };
+        for (const docSnap of snapshot.docs) {
+          const postId = docSnap.id;
+          if (!postIdsPermitidos.has(postId)) continue; // filtrar por IDs permitidos
+
+          const post = docSnap.data();
+          const fecha = post.fecha?.toDate() || new Date();
+          const likesSnapshot = await getCountFromServer(collection(db, 'posts', postId, 'likes'));
+
+          if (usuarioActual) {
+            const likeRef = doc(db, 'posts', postId, 'likes', usuarioActual);
+            const likeSnap = await getDoc(likeRef);
+            tempLikes[postId] = likeSnap.exists();
+          }
+
+          tempPosts.push({
+            id: postId,
+            contenido: post.contenido,
+            mediaUrl: post.mediaUrl,
+            mediaTipo: post.mediaTipo,
+            fecha,
+            usuarioId: post.usuarioId || 'desconocido',
+            totalLikes: likesSnapshot.data().count || 0,
+            incognito: post.incognito || false,
+          });
+
+          if (post.usuarioId && !tempUsuarios[post.usuarioId]) {
+            const userSnap = await getDoc(doc(db, 'usuarios', post.usuarioId));
+            if (userSnap.exists()) {
+              const data = userSnap.data();
+              tempUsuarios[post.usuarioId] = {
+                nombre: data.nombre,
+                apellido: data.apellido,
+                fotoPerfil: data.fotoPerfil || '',
+              };
+            }
           }
         }
-      }
 
-      setPosts(tempPosts);
-      setUsuarios(tempUsuarios);
-      setLikesUsuario(tempLikes);
-    });
+        setPosts(tempPosts);
+        setUsuarios(tempUsuarios);
+        setLikesUsuario(tempLikes);
+      });
 
-    return () => unsubscribe();
+      return () => unsubscribe();
+    };
+
+    obtenerPosts();
   }, []);
 
   useEffect(() => {
@@ -135,18 +151,6 @@ const Cardpost = () => {
     setOcultosActuales(nuevos);
   };
 
-  const reportarPublicacion = async (postId: string, usuarioReportado: string) => {
-    if (!usuarioActual) return;
-    await addDoc(collection(db, 'reportes_publicaciones'), {
-      postId,
-      usuarioReportado,
-      usuarioQueReporta: usuarioActual,
-      motivo: 'Contenido inapropiado',
-      fecha: new Date(),
-    });
-    alert('Publicación reportada.');
-  };
-
   const irAlPerfil = (usuarioId: string) => {
     if (!usuarioActual) return;
     if (usuarioId === usuarioActual) router.push('/Perfil');
@@ -189,9 +193,6 @@ const Cardpost = () => {
               {menuAbierto === post.id && (
                 <div className="absolute bg-black border shadow-md right-4 mt-10 rounded-md z-50 text-sm">
                   <ul className="py-2 px-3 space-y-2">
-                    <li className="cursor-pointer hover:text-red-500" onClick={() => reportarPublicacion(post.id, post.usuarioId)}>
-                      <FontAwesomeIcon icon={faFlag} /> Reportar publicación
-                    </li>
                     <li className="cursor-pointer hover:text-red-500" onClick={() => alert('Pendiente: bloqueo')}>
                       🚫 Bloquear usuario
                     </li>
@@ -238,4 +239,4 @@ const Cardpost = () => {
   );
 };
 
-export default Cardpost;
+export default Cardrep;

@@ -96,82 +96,83 @@ const Formregister = () => {
   };
 
   return (
-  <div className="formregister-container">
-    <h2 className="formregister-title">Crea tu cuenta</h2>
-    <p className="formregister-subtitle">Completa tus datos personales para comenzar</p>
+    <div className="formregister-container">
+      <h2 className="formregister-title">Crea tu cuenta</h2>
+      <p className="formregister-subtitle">
+        Completa todos los datos personales para comenzar
+      </p>
 
-    {mensaje && <p className="formregister-mensaje">{mensaje}</p>}
+      {mensaje && <p className="formregister-mensaje">{mensaje}</p>}
 
-    <form onSubmit={handleSubmit} className="formregister-form">
-      <input
-        type="text"
-        placeholder="Nombre"
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        className="formregister-input"
-        required
-      />
+      <form onSubmit={handleSubmit} className="formregister-form">
+        <input
+          type="text"
+          placeholder="Nombre*"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          className="formregister-input"
+          required
+        />
 
-      <input
-        type="text"
-        placeholder="Apellido"
-        value={apellido}
-        onChange={(e) => setApellido(e.target.value)}
-        className="formregister-input"
-        required
-      />
+        <input
+          type="text"
+          placeholder="Apellido*"
+          value={apellido}
+          onChange={(e) => setApellido(e.target.value)}
+          className="formregister-input"
+          required
+        />
 
-      <input
-        type="email"
-        placeholder="Correo electrónico universitario"
-        value={correo}
-        onChange={(e) => setCorreo(e.target.value)}
-        className="formregister-input"
-        required
-      />
+        <input
+          type="email"
+          placeholder="Correo electrónico universitario*"
+          value={correo}
+          onChange={(e) => setCorreo(e.target.value)}
+          className="formregister-input"
+          required
+        />
 
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={contraseña}
-        onChange={(e) => setContraseña(e.target.value)}
-        className="formregister-input"
-        required
-      />
+        <input
+          type="password"
+          placeholder="Contraseña*"
+          value={contraseña}
+          onChange={(e) => setContraseña(e.target.value)}
+          className="formregister-input"
+          required
+        />
+        <label className="formregister-label">Fecha de nacimiento:</label>
+        <input
+          type="date"
+          value={fechaNacimiento}
+          onChange={(e) => setFechaNacimiento(e.target.value)}
+          className="formregister-input"
+          required
+        />
 
-      <input
-        type="date"
-        value={fechaNacimiento}
-        onChange={(e) => setFechaNacimiento(e.target.value)}
-        className="formregister-input"
-        required
-      />
+        <select
+          value={idUniversidad}
+          onChange={(e) => setIdUniversidad(e.target.value)}
+          className="formregister-input"
+          required
+        >
+          <option value="">Selecciona tu universidad*</option>
+          {universidades.map((uni) => (
+            <option key={uni.id} value={uni.id}>
+              {uni.nombre}
+            </option>
+          ))}
+        </select>
 
-      <select
-        value={idUniversidad}
-        onChange={(e) => setIdUniversidad(e.target.value)}
-        className="formregister-input"
-        required
-      >
-        <option value="">Selecciona tu universidad</option>
-        {universidades.map((uni) => (
-          <option key={uni.id} value={uni.id}>
-            {uni.nombre}
-          </option>
-        ))}
-      </select>
+        <button type="submit" className="formregister-button">
+          Registrarme
+        </button>
+      </form>
 
-      <button type="submit" className="formregister-button">
-        Registrarme
-      </button>
-    </form>
-
-    <p className="formregister-loginlink">
-      ¿Ya tienes una cuenta? <a href="/loginsesion">Inicia sesión</a>
-    </p>
-  </div>
-);
-
+      <p className="formregister-loginlink">
+        ¿Ya tienes una cuenta? <a href="/loginsesion">Inicia sesión</a>
+      </p>
+    </div>
+  );
 };
 
 export default Formregister;

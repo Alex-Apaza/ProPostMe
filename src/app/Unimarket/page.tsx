@@ -9,6 +9,7 @@ export default function UniMarketPage() {
   const [filtros, setFiltros] = useState({
     categoria: 'Todos',
     precioMax: Infinity,
+    busqueda: '',
   })
 
   return (

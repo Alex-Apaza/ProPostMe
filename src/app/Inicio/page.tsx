@@ -76,11 +76,28 @@ const Page = () => {
       <footer className="footer-nuevo">
         <div className="footer-top">
           <nav className="footer-nav">
-            <a href="#">Blog</a>
-            <a href="#">Equipo</a>
-            <a href="#">Sobre Nosotros</a>
-            <a href="#">Testimonios</a>
-            <a href="#">Contacto</a>
+            <div className="tooltip">
+              <a href="#">Equipo</a>
+              <span className="tooltiptext">
+                Conoce a quienes están detrás de PostMe.
+              </span>
+            </div>
+            <div className="tooltip">
+              <a href="#">Sobre Nosotros</a>
+              <span className="tooltiptext">Nuestra misión y visión.</span>
+            </div>
+            <div className="tooltip">
+              <a href="#">Testimonios</a>
+              <span className="tooltiptext">
+                Lo que opinan nuestros usuarios.
+              </span>
+            </div>
+            <div className="tooltip">
+              <a href="#">Contacto</a>
+              <span className="tooltiptext">
+                Escríbenos o llámanos para más información.
+              </span>
+            </div>
           </nav>
           <div className="footer-icons">
             <a href="">

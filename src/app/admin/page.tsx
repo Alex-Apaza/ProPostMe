@@ -1,10 +1,11 @@
 'use client'
-import Headerp from '@/componentes/Headerp'
+import Crearpost from '@/componentes/Crearpost'
+import Cardrep from '@/componentes/Crearpostr'
 import MenuAdmin from '@/componentes/MenuAdmin'
 import TarjetasAdmin from '@/componentes/TarjetasAdmin'
-import TarjetasMarket from '@/componentes/TarjetasMarket'
+
 import { useState } from 'react'
-import React from 'react'
+import React from 'react' 
 
 export default function Page() {
   const [filtros, setFiltros] = useState({
@@ -13,7 +14,7 @@ export default function Page() {
   })
   return (
     <>
-      <Headerp />
+         
       <div className="flex">
         <MenuAdmin setFiltros={setFiltros} />
         <div className="flex-1 p-6">
@@ -21,6 +22,7 @@ export default function Page() {
           <p className="text-gray-600 mb-4">
             Contribuye al bienestar de la comunidad promoviendo una experiencia segura, respetuosa y saludable para todos.
           </p>
+          <Cardrep/>
           <TarjetasAdmin filtros={filtros} />
         </div>
       </div>

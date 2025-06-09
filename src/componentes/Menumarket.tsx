@@ -1,3 +1,4 @@
+// ✅ MenuUnimarket.tsx
 'use client'
 
 import React from 'react'
@@ -8,7 +9,7 @@ import { Dispatch, SetStateAction } from 'react'
 const categorias = ['Todos', 'Libros', 'Electronicos', 'Trabajos', 'Ropa y Accesorios', 'Otros']
 
 type Props = {
-  setFiltros: Dispatch<SetStateAction<{ categoria: string; precioMax: number }>>
+  setFiltros: Dispatch<SetStateAction<{ categoria: string; precioMax: number; busqueda: string }>>
 }
 
 const MenuUnimarket: React.FC<Props> = ({ setFiltros }) => {
@@ -22,6 +23,10 @@ const MenuUnimarket: React.FC<Props> = ({ setFiltros }) => {
       ...prev,
       precioMax: isNaN(valor) ? Infinity : valor,
     }))
+  }
+
+  const handleBusqueda = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiltros((prev) => ({ ...prev, busqueda: e.target.value }))
   }
 
   return (
@@ -42,7 +47,16 @@ const MenuUnimarket: React.FC<Props> = ({ setFiltros }) => {
       </ul>
 
       <h3 className="menu-title mt-4">Filtros</h3>
-      <label>Precio máximo</label>
+
+      <label>Buscar por título</label>
+      <input
+        type="text"
+        placeholder="Buscar..."
+        className="input-precio"
+        onChange={handleBusqueda}
+      />
+
+      <label className="mt-2">Precio máximo</label>
       <input
         type="number"
         placeholder="Máx"
@@ -54,4 +68,4 @@ const MenuUnimarket: React.FC<Props> = ({ setFiltros }) => {
   )
 }
 
-export default MenuUnimarket
+export default MenuUnimarket 
