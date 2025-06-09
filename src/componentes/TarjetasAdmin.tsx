@@ -124,7 +124,9 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
       <div>
         <h3>Gestión de Usuarios</h3>
         <table className="w-full border">
-          <thead><tr>
+          
+          <thead style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }}>
+<tr>
             <th>Nombre</th><th>Apellido</th><th>Correo</th><th>Carrera</th><th>Bloqueado</th><th>Eliminar</th>
           </tr></thead>
           <tbody>
@@ -135,7 +137,7 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
                 <td><Input defaultValue={u.correo_institucional} onKeyDown={e => e.key === "Enter" && editarUsuario(u.id!, "correo_institucional", (e.target as any).value)} /></td>
                 <td><Input defaultValue={u.carrera} onKeyDown={e => e.key === "Enter" && editarUsuario(u.id!, "carrera", (e.target as any).value)} /></td>
                 <td>{u.bloqueado ? "✅" : ""}</td>
-                <td><Button variant="destructive" onClick={() => eliminarUsuario(u.id!)}>Eliminar</Button></td>
+                <td><Button style={{ background: "linear-gradient(to right,rgb(240, 61, 61),rgb(141, 24, 43))", color: "white" }} variant="destructive" onClick={() => eliminarUsuario(u.id!)}>Eliminar</Button></td>
               </tr>
             ))}
           </tbody>
@@ -164,7 +166,7 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
             onChange={e => setNuevoUsuario(prev => ({ ...prev, [campo]: e.target.value }))}
           />
         ))}
-        <Button onClick={crearUsuario}>Crear Usuario</Button>
+        <Button style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }} onClick={crearUsuario}>Crear Usuario</Button>
       </div>
     );
   }
@@ -174,7 +176,8 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
       <div>
         <h3>Reportes de Publicaciones</h3>
         <table className="w-full border">
-          <thead><tr>
+          <thead style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }}>
+            <tr>
             <th>Motivo</th><th>PostId</th><th>Contenido</th><th>Acciones</th>
           </tr></thead>
           <tbody>
@@ -184,8 +187,8 @@ export default function TarjetasAdmin({ filtros }: TarjetasAdminProps) {
                 <td>{r.postId}</td>
                 <td>{postsMap[r.postId] || "[Cargando]"}</td>
                 <td>
-                  <Button variant="destructive" onClick={() => eliminarReporte(r.id)}>Eliminar</Button>
-                  <Button onClick={() => toggleOcultar(r.id)}>
+                  <Button style={{ background: "linear-gradient(to right,rgb(220, 78, 78),rgb(91, 18, 23))", color: "white" }} variant="destructive" onClick={() => eliminarReporte(r.id)}>Eliminar</Button>
+                  <Button style={{ background: "linear-gradient(to right, #4EDCD8, #30A3A3)", color: "white" }} onClick={() => toggleOcultar(r.id)}>
                     {ocultos.includes(r.id) ? "Mostrar" : "Ocultar"}
                   </Button>
                 </td>

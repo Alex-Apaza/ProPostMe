@@ -1,0 +1,77 @@
+.menu-unimarket {
+  width: 260px;
+  padding: 20px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* fondo semi-transparente */
+  backdrop-filter: blur(12px); /* efecto borroso */
+  color: white;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-vender {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(to right, #4EDCD8, #30A3A3);
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-vender:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 10px #4EDCD8;
+}
+
+.menu-title {
+  font-weight: bold;
+  margin: 16px 0 10px;
+  font-size: 16px;
+  color: #4EDCD8;
+  text-transform: uppercase;
+}
+
+.categorias-lista {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.categoria-boton {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  text-align: left;
+  color: #eee;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.categoria-boton:hover {
+  color: #4EDCD8;
+}
+
+.input-precio {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.input-precio:focus {
+  border-color: #4EDCD8;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}

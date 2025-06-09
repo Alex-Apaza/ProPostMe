@@ -1,4 +1,4 @@
-'use client';
+'use client'; 
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Comentario from '@/componentes/Comentario';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faShare, faFlag, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faComment, faShare, faFlag, faEyeSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface Post {
   id: string;
@@ -53,7 +53,6 @@ const Cardrep = () => {
 
   useEffect(() => {
     const cargarPostsFiltrados = async () => {
-      // 1. Obtener todos los postId de reportes_publicaciones
       const reportesSnapshot = await getDocs(collection(db, 'reportes_publicaciones'));
       const postIdsReportados = reportesSnapshot.docs.map(doc => doc.data().postId).filter(Boolean);
 
@@ -62,7 +61,6 @@ const Cardrep = () => {
         return;
       }
 
-      // Firestore permite máximo 10 elementos en 'in', por eso dividimos en batches si es necesario
       const batches: string[][] = [];
       for (let i = 0; i < postIdsReportados.length; i += 10) {
         batches.push(postIdsReportados.slice(i, i + 10));
@@ -87,7 +85,6 @@ const Cardrep = () => {
           const postId = docSnap.id;
           const likesSnapshot = await getCountFromServer(collection(db, 'posts', postId, 'likes'));
 
-          // Verificar si el usuario actual le dio like
           if (usuarioActual) {
             const likeRef = doc(db, 'posts', postId, 'likes', usuarioActual);
             const likeSnap = await getDoc(likeRef);
@@ -105,7 +102,6 @@ const Cardrep = () => {
             incognito: post.incognito || false,
           });
 
-          // Cargar usuario si no está cargado
           if (post.usuarioId && !tempUsuarios[post.usuarioId]) {
             const userSnap = await getDoc(doc(db, 'usuarios', post.usuarioId));
             if (userSnap.exists()) {
@@ -126,7 +122,6 @@ const Cardrep = () => {
     };
 
     cargarPostsFiltrados();
-
   }, [usuarioActual]);
 
   useEffect(() => {
@@ -172,16 +167,18 @@ const Cardrep = () => {
     setOcultosActuales(nuevos);
   };
 
-  const reportarPublicacion = async (postId: string, usuarioReportado: string) => {
-    if (!usuarioActual) return;
-    await addDoc(collection(db, 'reportes_publicaciones'), {
-      postId,
-      usuarioReportado,
-      usuarioQueReporta: usuarioActual,
-      motivo: 'Contenido inapropiado',
-      fecha: new Date(),
-    });
-    alert('Publicación reportada.');
+  const eliminarPublicacion = async (postId: string) => {
+    if (!confirm('¿Estás seguro de eliminar esta publicación?')) return;
+
+    try {
+      await deleteDoc(doc(db, 'posts', postId));
+      await deleteDoc(doc(db, 'reportes_publicaciones', postId));
+      setPosts(prev => prev.filter(p => p.id !== postId));
+      alert('Publicación eliminada correctamente.');
+    } catch (error) {
+      console.error('Error eliminando publicación:', error);
+      alert('Ocurrió un error al eliminar la publicación.');
+    }
   };
 
   const irAlPerfil = (usuarioId: string) => {
@@ -211,7 +208,7 @@ const Cardrep = () => {
         return (
           <div key={post.id} className="max-w-xl w-full bg-white border border-[#4EDCD8] rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1">
             {/* Encabezado */}
-            <div className="flex justify-between items-start p-4">
+            <div className="flex justify-between items-start p-4 relative">
               <div className="flex gap-3 items-center cursor-pointer" onClick={() => irAlPerfil(post.usuarioId)}>
                 <img src={usuario.fotoPerfil || '/Perfil.png'} alt="avatar" className="w-10 h-10 rounded-full object-cover" />
                 <div>
@@ -224,15 +221,15 @@ const Cardrep = () => {
                 onClick={() => setMenuAbierto(menuAbierto === post.id ? null : post.id)}
               >...</button>
               {menuAbierto === post.id && (
-                <div className="absolute bg-black border shadow-md right-4 mt-10 rounded-md z-50 text-sm">
+                <div className="absolute bg-black border shadow-md right-4 mt-10 rounded-md z-50 text-sm text-white">
                   <ul className="py-2 px-3 space-y-2">
-                    <li className="cursor-pointer hover:text-red-500" onClick={() => reportarPublicacion(post.id, post.usuarioId)}>
-                      <FontAwesomeIcon icon={faFlag} /> Reportar publicación
+                    <li className="cursor-pointer hover:text-red-500" onClick={() => eliminarPublicacion(post.id)}>
+                      <FontAwesomeIcon icon={faTrash} /> Eliminar publicación
                     </li>
                     <li className="cursor-pointer hover:text-red-500" onClick={() => alert('Pendiente: bloqueo')}>
                       🚫 Bloquear usuario
                     </li>
-                    <li className="cursor-pointer hover:text-zinc-600" onClick={() => ocultarPublicacion(post.id)}>
+                    <li className="cursor-pointer hover:text-zinc-400" onClick={() => ocultarPublicacion(post.id)}>
                       <FontAwesomeIcon icon={faEyeSlash} /> Ocultar publicación
                     </li>
                   </ul>
@@ -258,15 +255,15 @@ const Cardrep = () => {
                 <button onClick={() => toggleLike(post.id)} className={`flex items-center gap-1 ${likesUsuario[post.id] ? 'text-[#4EDCD8]' : 'hover:text-[#4EDCD8]'}`}>
                   <FontAwesomeIcon icon={faThumbsUp} /> Me gusta {post.totalLikes > 0 && <span>({post.totalLikes})</span>}
                 </button>
-                <button onClick={() => setComentariosAbiertos(post.id === comentariosAbiertos ? null : post.id)} className="flex items-center gap-1 hover:text-[#4EDCD8]">
+                <button onClick={() => setComentariosAbiertos(post.id === comentariosAbiertos ? null : post.id)} className="hover:text-[#4EDCD8]">
                   <FontAwesomeIcon icon={faComment} /> Comentar
                 </button>
-                <button onClick={() => compartirPost(post)} className="flex items-center gap-1 hover:text-[#4EDCD8]">
+                <button onClick={() => compartirPost(post)} className="hover:text-[#4EDCD8]">
                   <FontAwesomeIcon icon={faShare} /> Compartir
                 </button>
               </div>
 
-              {comentariosAbiertos === post.id && <Comentario postId={post.id} />}
+              
             </div>
           </div>
         );

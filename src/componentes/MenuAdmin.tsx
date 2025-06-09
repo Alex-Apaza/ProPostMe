@@ -34,6 +34,9 @@ const MenuAdmin : React.FC<Props> = ({ setFiltros }) => {
           </li>
         ))}
       </ul>
+      <Link href="/addpost" className="btn-vender">
+        Analisis de Datos
+      </Link>
 
       
     </aside>
