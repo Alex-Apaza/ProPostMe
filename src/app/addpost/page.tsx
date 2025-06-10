@@ -12,15 +12,12 @@ export default function Feed() {
   return (
     <>
       <div className="feed-container">
-       
-
         <div className="posteos-col">
           <div className="btn-atras-container">
             <Link href="/admin" className="btn-vender">
               Volver al Panel
             </Link>
           </div>
-
           <Crearpost />
           <Cardrep />
         </div>
